@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { supabase } from './lib/supabase'
+import { profilTamMi } from './lib/profil'
 import AuthForm from './AuthForm'
 import IlanForm from './IlanForm'
 import KonumSecici from './KonumSecici'
@@ -205,6 +207,7 @@ function HedefKitleIkon({ tur, renk }: { tur: string; renk: string }) {
 }
 
 export default function Home() {
+  const router = useRouter()
   const [ilanlar, setIlanlar] = useState<Ilan[]>([])
   const [kullanici, setKullanici] = useState<User | null>(null)
   const [authAcik, setAuthAcik] = useState(false)
@@ -318,11 +321,15 @@ export default function Home() {
   }
 
   const ilanVerTiklandi = () => {
-    if (kullanici) {
-      setIlanFormAcik(true)
-    } else {
+    if (!kullanici) {
       setAuthAcik(true)
+      return
     }
+    if (!profilTamMi(kullanici)) {
+      router.push('/profil')
+      return
+    }
+    setIlanFormAcik(true)
   }
 
   const kategoriyeGit = (kategori: string) => {

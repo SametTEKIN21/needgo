@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabase'
 import { kotaDurumu, tarihMetni, type KotaDurumu } from '../../lib/kota'
+import { profilTamMi } from '../../lib/profil'
 import type { User } from '@supabase/supabase-js'
 
 type Ilan = {
@@ -113,6 +114,13 @@ export default function IlanDetay() {
 
     if (mevcut) {
       router.push(`/mesajlar/${mevcut.id}`)
+      return
+    }
+
+    // Yeni istek — profil eksikse önce profile yönlendir
+    if (!profilTamMi(kullanici)) {
+      setMesajGonderiliyor(false)
+      router.push('/profil')
       return
     }
 
@@ -270,12 +278,13 @@ export default function IlanDetay() {
                 </p>
               )}
               {!kendiIlaniMi && kullanici && (() => {
-                const kotaDolu = !!kota && kota.kalan === 0 && !mevcutKonusmaVar
+                const profilEksik = !profilTamMi(kullanici) && !mevcutKonusmaVar
+                const kotaDolu = !profilEksik && !!kota && kota.kalan === 0 && !mevcutKonusmaVar
                 return (
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={mesajGonder}
-                      disabled={mesajGonderiliyor || kotaDolu}
+                      disabled={mesajGonderiliyor || kotaDolu || profilEksik}
                       className="self-start inline-block text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-[var(--renk-kraft)] hover:bg-[var(--renk-orman-koyu)] transition-colors disabled:opacity-60"
                     >
                       {mesajGonderiliyor
@@ -285,6 +294,15 @@ export default function IlanDetay() {
                         : 'Mesaj Gönder'}
                     </button>
 
+                    {profilEksik && (
+                      <p className="text-xs text-[#B5533C]">
+                        Mesaj göndermeden önce{' '}
+                        <Link href="/profil" className="font-semibold underline">
+                          profil bilgilerini
+                        </Link>{' '}
+                        tamamlamalısın.
+                      </p>
+                    )}
                     {kotaDolu && (
                       <p className="text-xs text-[#B5533C]">
                         {kota?.yenilenmeTarihi
