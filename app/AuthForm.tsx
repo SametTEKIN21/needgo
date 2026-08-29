@@ -19,6 +19,16 @@ function hataMesajiCevir(mesaj: string): string {
   if (mesaj.includes('Email not confirmed')) {
     return 'E-posta adresini onaylamadan giriş yapamazsın. Gelen kutunu kontrol et.'
   }
+  if (
+    mesaj.includes('Invalid API key') ||
+    mesaj.includes('No API key') ||
+    mesaj.includes('env değişkenleri eksik')
+  ) {
+    return 'Sunucu yapılandırması eksik (Supabase anahtarı). Site yöneticisiyle iletişime geçin.'
+  }
+  if (mesaj.includes('Failed to fetch') || mesaj.includes('NetworkError')) {
+    return 'Sunucuya ulaşılamadı. İnternet bağlantını kontrol edip tekrar dene.'
+  }
   return 'Bir hata oluştu, lütfen tekrar dene.'
 }
 
@@ -35,7 +45,17 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
     setHata('')
     setMesaj('')
     setYukleniyor(true)
+    try {
+      await gonderIstek()
+    } catch (err) {
+      console.error('Auth hatası:', err)
+      setHata(hataMesajiCevir(err instanceof Error ? err.message : String(err)))
+    } finally {
+      setYukleniyor(false)
+    }
+  }
 
+  const gonderIstek = async () => {
     if (mod === 'kayit') {
       const { error } = await supabase.auth.signUp({ email, password: sifre })
       if (error) {
@@ -60,8 +80,6 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
         onClose()
       }
     }
-
-    setYukleniyor(false)
   }
 
   const baslik =
