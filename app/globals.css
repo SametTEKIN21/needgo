@@ -16,6 +16,14 @@ body {
   background-color: var(--renk-kraft);
   color: var(--renk-ink);
   font-family: 'Inter', sans-serif;
+  /* Taşan bir öğe tüm sayfayı yana kaydırmasın (sticky'yi bozmayan clip) */
+  overflow-x: clip;
+}
+
+/* Görsel/medya varsayılan olarak kapsayıcısını aşmasın */
+img,
+video {
+  max-width: 100%;
 }
 
 .font-display {

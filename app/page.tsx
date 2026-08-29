@@ -438,16 +438,16 @@ export default function Home() {
 
       <header className="sticky top-0 z-40 border-b border-[var(--renk-cizgi)] bg-white">
         <div>
-          <div className="w-full px-6 h-16 flex items-center gap-4">
-            <Link href="/" aria-label="NeedGO" className="mr-3 inline-flex items-center gap-2 shrink-0">
-              <img src="/needgo-n.png" alt="" className="h-9 w-9" />
-              <span className="font-display text-2xl font-bold tracking-tight">
+          <div className="w-full px-3 sm:px-6 h-16 flex items-center gap-2 sm:gap-4">
+            <Link href="/" aria-label="NeedGO" className="inline-flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <img src="/needgo-n.png" alt="" className="h-8 w-8 sm:h-9 sm:w-9" />
+              <span className="font-display text-lg sm:text-2xl font-bold tracking-tight">
                 <span className="text-[#2099FF]">Need</span><span className="text-[#004CD6]">GO</span>
               </span>
             </Link>
 
-            <div className="flex-1 flex items-center gap-3">
-              <div className="flex-1 max-w-xl flex items-center gap-2 bg-white border border-[var(--renk-cizgi)] rounded-full px-4 py-2.5">
+            <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
+              <div className="flex-1 min-w-0 max-w-xl flex items-center gap-2 bg-white border border-[var(--renk-cizgi)] rounded-full px-3 sm:px-4 py-2 sm:py-2.5">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0 text-[var(--renk-orman)]">
                   <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
                   <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -474,7 +474,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               <Link
                 href="/mesajlar"
                 onClick={mesajlariGorulduIsaretle}
@@ -507,13 +507,14 @@ export default function Home() {
 
               <button
                 onClick={ilanVerTiklandi}
-                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition-colors"
+                aria-label="İlan Ver"
+                className="flex items-center gap-1.5 text-sm font-semibold px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition-colors shrink-0"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="shrink-0">
                   <path d="M3 8a2 2 0 0 1 2-2h1.2a2 2 0 0 0 1.7-.9l.6-.9a2 2 0 0 1 1.7-.9h3.6a2 2 0 0 1 1.7.9l.6.9a2 2 0 0 0 1.7.9H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
                   <circle cx="12" cy="12.5" r="3.2" stroke="currentColor" strokeWidth="2" />
                 </svg>
-                İlan Ver
+                <span className="hidden sm:inline">İlan Ver</span>
               </button>
 
               {kullanici ? (
@@ -573,7 +574,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white border-t border-[var(--renk-cizgi)]">
-          <div className="w-full px-6 py-2.5 flex items-center gap-5">
+          <div className="w-full px-3 sm:px-6 py-2.5 flex items-center gap-3 sm:gap-5">
             <button
               onClick={() => setTumKategorilerAcik(!tumKategorilerAcik)}
               className={`shrink-0 flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
@@ -591,7 +592,7 @@ export default function Home() {
               Tüm Kategoriler
               <span className="text-[10px]">{tumKategorilerAcik ? '▴' : '▾'}</span>
             </button>
-            <nav className="flex-1 flex items-center gap-6 overflow-x-auto whitespace-nowrap">
+            <nav className="flex-1 min-w-0 flex items-center gap-4 sm:gap-6 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {KATEGORILER.map((kat) => (
                 <button
                   key={kat}
@@ -609,7 +610,7 @@ export default function Home() {
           </div>
 
           {tumKategorilerAcik && (
-            <div className="w-full px-6 pb-4">
+            <div className="w-full px-3 sm:px-6 pb-4">
               <div className="bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-lg overflow-hidden max-w-sm">
                 <button
                   onClick={hepsiniGoster}
@@ -686,12 +687,12 @@ export default function Home() {
                 style={{ transform: `translateX(-${aktifSlayt * 100}%)` }}
               >
                 {/* 1. slayt — orijinal metin */}
-                <div className="w-full shrink-0 px-2">
+                <div className="w-full shrink-0 px-9 sm:px-2">
                   <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
                     <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
                       Atma · Paylaş · Dönüştür
                     </p>
-                    <h1 className="font-display text-3xl sm:text-5xl font-semibold text-[var(--renk-ink)] tracking-tight">
+                    <h1 className="font-display text-[26px] leading-tight sm:text-5xl font-semibold text-[var(--renk-ink)] tracking-tight text-balance">
                       Kullanmadığın eşya, birinin ihtiyacı olsun.
                     </h1>
                     <p className="text-[var(--renk-ink)]/60 mt-4 max-w-md mx-auto text-sm sm:text-base">
@@ -706,7 +707,7 @@ export default function Home() {
 
                 {/* Bilgi slaytları */}
                 {HERO_BILGI_SLAYTLARI.map((slayt) => (
-                  <div key={slayt.baslik} className="w-full shrink-0 px-2">
+                  <div key={slayt.baslik} className="w-full shrink-0 px-9 sm:px-2">
                     <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
                       <p className="inline-block font-semibold text-xs sm:text-sm tracking-tight border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
                         <span className="text-[var(--renk-ink)]/70">Neden </span>
@@ -714,7 +715,7 @@ export default function Home() {
                         <span className="text-[#004CD6]">GO</span>
                         <span className="text-[var(--renk-ink)]/70">?</span>
                       </p>
-                      <h2 className="font-display text-2xl sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight max-w-xl">
+                      <h2 className="font-display text-xl leading-tight sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight max-w-xl text-balance">
                         {slayt.baslik}
                       </h2>
                       <p className="text-[var(--renk-ink)]/60 mt-4 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
@@ -780,8 +781,8 @@ export default function Home() {
                 key={kitle.baslik}
                 onMouseEnter={() => setAktifKitleIndex(i)}
                 onClick={() => setAktifKitleIndex(aktif ? null : i)}
-                style={{ flexGrow: aktif ? 1.5 : 1, flexBasis: 0, transition: 'flex-grow 480ms cubic-bezier(0.4, 0, 0.2, 1)' }}
-                className="relative min-h-[230px] md:min-h-0 bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-xl overflow-hidden cursor-pointer flex flex-col"
+                style={{ flexGrow: aktif ? 1.5 : 1, transition: 'flex-grow 480ms cubic-bezier(0.4, 0, 0.2, 1)' }}
+                className="relative basis-auto md:basis-0 min-h-[230px] md:min-h-0 bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-xl overflow-hidden cursor-pointer flex flex-col"
               >
                 {!aktif ? (
                   <>
@@ -796,18 +797,18 @@ export default function Home() {
                     </p>
                   </>
                 ) : (
-                  <div className="flex flex-col h-full p-3">
+                  <div className="flex flex-col md:h-full p-3">
                     <div
-                      className="rounded-lg flex items-center justify-center shrink-0 h-32 md:h-40"
+                      className="rounded-lg flex items-center justify-center shrink-0 h-28 md:h-40"
                       style={{ backgroundColor: KITLE_PANEL_BG }}
                     >
                       <HedefKitleIkon tur={kitle.ikon} renk={KITLE_PANEL_RENK} />
                     </div>
-                    <div className="pt-4 px-1 pb-1 flex flex-col flex-1 min-w-[150px] overflow-hidden">
+                    <div className="pt-4 px-1 pb-1 flex flex-col md:flex-1 min-w-0 md:overflow-hidden">
                       <h3 className="font-display text-lg font-semibold text-[var(--renk-ink)] mb-2">
                         {kitle.baslik}
                       </h3>
-                      <div className="mb-4 flex-1 overflow-y-auto">
+                      <div className="mb-4 md:flex-1 md:overflow-y-auto">
                         <p className="text-xs text-[var(--renk-ink)]/60">
                           {kitle.aciklama}
                         </p>
