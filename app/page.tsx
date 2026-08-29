@@ -683,8 +683,11 @@ export default function Home() {
                 {HERO_BILGI_SLAYTLARI.map((slayt) => (
                   <div key={slayt.baslik} className="w-full shrink-0 px-2">
                     <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
-                      <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
-                        Neden NeedGO?
+                      <p className="inline-block font-semibold text-xs sm:text-sm tracking-tight border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
+                        <span className="text-[var(--renk-ink)]/70">Neden </span>
+                        <span className="text-[#2099FF]">Need</span>
+                        <span className="text-[#004CD6]">GO</span>
+                        <span className="text-[var(--renk-ink)]/70">?</span>
                       </p>
                       <h2 className="font-display text-2xl sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight max-w-xl">
                         {slayt.baslik}
