@@ -968,23 +968,27 @@ export default function Home() {
             <h3 className="font-display text-sm font-semibold text-[var(--renk-ink)] mb-3">Bizi Takip Et</h3>
             <div className="flex flex-wrap gap-2">
               {[
-                { ad: 'Instagram', d: 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM17.5 6.5h.01M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Z' },
-                { ad: 'X', d: 'M4 4l16 16M20 4 4 20' },
-                { ad: 'Facebook', d: 'M14 8h2V5h-2c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2l1-3h-3V8c0-.6.4-1 1-1Z' },
-                { ad: 'TikTok', d: 'M14 4v9.5a3.5 3.5 0 1 1-3-3.46M14 4c0 2.5 2 4.5 5 4.5' },
-                { ad: 'YouTube', d: 'M3 8a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8Zm7 1.5v5l4.5-2.5L10 9.5Z' },
-              ].map((s) => (
-                <a
-                  key={s.ad}
-                  href="#"
-                  aria-label={s.ad}
-                  className="w-9 h-9 rounded-full bg-[var(--renk-kraft)] border border-[var(--renk-cizgi)] flex items-center justify-center text-[var(--renk-ink)]/60 hover:bg-[var(--renk-orman)] hover:text-white hover:border-[var(--renk-orman)] transition-colors"
-                >
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-                    <path d={s.d} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              ))}
+                { ad: 'Instagram', url: 'https://instagram.com/needgo2026', d: 'M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7ZM17.5 6.5h.01M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Z' },
+                { ad: 'X', url: '', d: 'M4 4l16 16M20 4 4 20' },
+                { ad: 'Facebook', url: '', d: 'M14 8h2V5h-2c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2l1-3h-3V8c0-.6.4-1 1-1Z' },
+                { ad: 'TikTok', url: '', d: 'M14 4v9.5a3.5 3.5 0 1 1-3-3.46M14 4c0 2.5 2 4.5 5 4.5' },
+                { ad: 'YouTube', url: '', d: 'M3 8a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8Zm7 1.5v5l4.5-2.5L10 9.5Z' },
+              ]
+                .filter((s) => s.url)
+                .map((s) => (
+                  <a
+                    key={s.ad}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={s.ad}
+                    className="w-9 h-9 rounded-full bg-[var(--renk-kraft)] border border-[var(--renk-cizgi)] flex items-center justify-center text-[var(--renk-ink)]/60 hover:bg-[var(--renk-orman)] hover:text-white hover:border-[var(--renk-orman)] transition-colors"
+                  >
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                      <path d={s.d} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                ))}
             </div>
             <p className="text-xs text-[var(--renk-ink)]/40 mt-4 leading-relaxed">
               Mobil uygulama yakında. İlk sen haberdar ol.
