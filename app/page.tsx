@@ -85,7 +85,7 @@ const HERO_SLAYT_SAYISI = HERO_BILGI_SLAYTLARI.length + 1
 const HEDEF_KITLELER = [
   {
     no: '01',
-    baslik: 'Öğrenciler için',
+    baslik: 'Öğrenciler İçin',
     aciklama: 'Ders kitabından mini buzdolabına, yurt/ev ihtiyacın burada.',
     maddeler: [
       'Yeni üniversite kazananlar',
@@ -98,7 +98,7 @@ const HEDEF_KITLELER = [
   },
   {
     no: '02',
-    baslik: 'Yeni eve taşınanlar için',
+    baslik: 'Yeni Eve Taşınanlar İçin',
     aciklama: 'Sıfırdan ev kuruyorsun, kullanışlı mobilya ve eşyalar seni bekliyor.',
     maddeler: [
       'Yeni bir şehre atananlar',
@@ -110,7 +110,7 @@ const HEDEF_KITLELER = [
   },
   {
     no: '03',
-    baslik: 'İşletmeler için',
+    baslik: 'İşletmeler İçin',
     aciklama: 'Ofis ekipmanından depo malzemesine, işletmene lazım olanı bul.',
     maddeler: [
       'Kafeler',
@@ -122,7 +122,7 @@ const HEDEF_KITLELER = [
   },
   {
     no: '04',
-    baslik: 'STK ve derneklere destek',
+    baslik: 'STK, Dernek ve Belediyeler İçin',
     aciklama: 'İhtiyaç sahibi ailelere ulaştırmak isteyen kurumlar için toplu eşya kaynağı.',
     kategori: '',
     ikon: 'kalp',
