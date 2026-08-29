@@ -57,7 +57,11 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
 
   const gonderIstek = async () => {
     if (mod === 'kayit') {
-      const { error } = await supabase.auth.signUp({ email, password: sifre })
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: sifre,
+        options: { emailRedirectTo: `${window.location.origin}/` },
+      })
       if (error) {
         setHata(hataMesajiCevir(error.message))
       } else {
