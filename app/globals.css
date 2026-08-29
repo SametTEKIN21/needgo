@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --renk-kraft: #eef1ef;
+  --renk-ink: #003bca;
+  --renk-orman: #0066ff;
+  --renk-orman-koyu: #003bca;
+  --renk-ocre: #00a3ff;
+  --renk-kart: #ffffff;
+  --renk-cizgi: #b3dfff;
+}
+
+body {
+  background-color: var(--renk-kraft);
+  color: var(--renk-ink);
+  font-family: 'Inter', sans-serif;
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+}
+
+.font-mono-etiket {
+  font-family: 'IBM Plex Mono', monospace;
+}
+ 
