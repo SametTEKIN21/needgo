@@ -92,6 +92,16 @@ export default function MesajDetay() {
     }
   }
 
+  const geriGit = () => {
+    // Tarayıcı geçmişinde geri gidilecek bir sayfa varsa oraya dön (böylece
+    // "geri → mesajlar → geri → ana sayfa" akışı bozulmaz); yoksa mesaj listesine git.
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back()
+    } else {
+      router.push('/mesajlar')
+    }
+  }
+
   const konusmayiSil = async () => {
     if (siliniyor) return
     const onay = window.confirm(
@@ -145,7 +155,14 @@ export default function MesajDetay() {
     <div className="min-h-screen bg-[var(--renk-kraft)] flex flex-col">
       <header className="sticky top-0 z-40 bg-[var(--renk-kraft)]/95 backdrop-blur border-b border-[var(--renk-cizgi)]">
         <div className="max-w-2xl mx-auto px-5 h-16 flex items-center justify-between gap-3">
-          <Link href="/mesajlar" className="text-[var(--renk-ink)]/60 text-lg">←</Link>
+          <button
+            type="button"
+            onClick={geriGit}
+            aria-label="Geri"
+            className="text-[var(--renk-ink)]/60 text-lg leading-none shrink-0"
+          >
+            ←
+          </button>
           <div className="flex-1 min-w-0">
             <p className="font-display text-base font-semibold text-[var(--renk-ink)] truncate">
               {konusma.ilanlar?.baslik || 'İlan'}
