@@ -548,7 +548,7 @@ export default function Home() {
       {/* Kimler için NeedGO? — üzerine gelince genişleyen kartlar */}
       <section className="max-w-6xl mx-auto px-5 py-12 w-full">
         <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-6">
-          Kimler için NeedGO?
+          Kimler için NeedGO ?
         </h2>
 
         <div
