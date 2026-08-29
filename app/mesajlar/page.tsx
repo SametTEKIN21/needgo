@@ -11,8 +11,9 @@ type Konusma = {
   ilan_id: string
   gonderen_id: string
   alici_id: string
+  gonderen_email: string | null
   olusturulma_tarihi: string
-  ilanlar: { baslik: string } | null
+  ilanlar: { baslik: string; kullanici_email: string | null } | null
 }
 
 export default function Mesajlar() {
@@ -29,7 +30,7 @@ export default function Mesajlar() {
       if (userData.user) {
         const { data, error } = await supabase
           .from('konusmalar')
-          .select('*, ilanlar(baslik)')
+          .select('*, ilanlar(baslik, kullanici_email)')
           .or(`gonderen_id.eq.${userData.user.id},alici_id.eq.${userData.user.id}`)
           .order('olusturulma_tarihi', { ascending: false })
 
@@ -124,6 +125,11 @@ export default function Mesajlar() {
           {konusmalar.map((konusma) => {
             const benBasladim = konusma.gonderen_id === kullanici.id
             const buSiliniyor = silinenId === konusma.id
+            const karsiTarafEposta = benBasladim
+              ? konusma.ilanlar?.kullanici_email ?? null
+              : konusma.gonderen_email ?? null
+            const karsiTarafEtiket =
+              karsiTarafEposta || (benBasladim ? 'İlan sahibi' : 'İstek yapan kişi')
             return (
               <div
                 key={konusma.id}
@@ -137,8 +143,11 @@ export default function Mesajlar() {
                     <h3 className="font-display text-base font-semibold text-[var(--renk-ink)] truncate">
                       {konusma.ilanlar?.baslik || 'İlan'}
                     </h3>
-                    <p className="text-xs text-[var(--renk-ink)]/50 mt-0.5">
-                      {benBasladim ? 'Sen mesaj gönderdin' : 'Sana mesaj geldi'}
+                    <p className="text-xs text-[var(--renk-ink)]/70 mt-0.5 truncate">
+                      {karsiTarafEtiket}
+                    </p>
+                    <p className="text-[11px] text-[var(--renk-ink)]/45 mt-0.5">
+                      {benBasladim ? 'Sen istek gönderdin' : 'Sana istek geldi'}
                     </p>
                   </div>
                   <span className="text-[var(--renk-ink)]/30 ml-3">›</span>

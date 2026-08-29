@@ -18,7 +18,8 @@ type Konusma = {
   ilan_id: string
   gonderen_id: string
   alici_id: string
-  ilanlar: { baslik: string } | null
+  gonderen_email: string | null
+  ilanlar: { baslik: string; kullanici_email: string | null } | null
 }
 
 export default function MesajDetay() {
@@ -57,7 +58,7 @@ export default function MesajDetay() {
 
       const { data: konusmaData, error } = await supabase
         .from('konusmalar')
-        .select('*, ilanlar(baslik)')
+        .select('*, ilanlar(baslik, kullanici_email)')
         .eq('id', params.id)
         .single()
 
@@ -151,6 +152,15 @@ export default function MesajDetay() {
     )
   }
 
+  const benGonderenim = konusma.gonderen_id === kullanici.id
+  // Karşı taraf: ilan sahibiysem istek yapan kişi (gonderen_email),
+  // istek yapansam ilan sahibi (ilanın kullanici_email'i).
+  const karsiTarafEposta = benGonderenim
+    ? konusma.ilanlar?.kullanici_email ?? null
+    : konusma.gonderen_email ?? null
+  const karsiTarafEtiket =
+    karsiTarafEposta || (benGonderenim ? 'İlan sahibi' : 'İstek yapan kişi')
+
   return (
     <div className="min-h-screen bg-[var(--renk-kraft)] flex flex-col">
       <header className="sticky top-0 z-40 bg-[var(--renk-kraft)]/95 backdrop-blur border-b border-[var(--renk-cizgi)]">
@@ -166,6 +176,9 @@ export default function MesajDetay() {
           <div className="flex-1 min-w-0">
             <p className="font-display text-base font-semibold text-[var(--renk-ink)] truncate">
               {konusma.ilanlar?.baslik || 'İlan'}
+            </p>
+            <p className="text-xs text-[var(--renk-ink)]/50 truncate">
+              {karsiTarafEtiket} ile
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -198,7 +211,13 @@ export default function MesajDetay() {
         {mesajlar.map((mesaj) => {
           const benimMi = mesaj.gonderen_id === kullanici.id
           return (
-            <div key={mesaj.id} className={`flex ${benimMi ? 'justify-end' : 'justify-start'}`}>
+            <div
+              key={mesaj.id}
+              className={`flex flex-col ${benimMi ? 'items-end' : 'items-start'}`}
+            >
+              <span className="text-[11px] text-[var(--renk-ink)]/45 mb-1 px-1 max-w-[75%] truncate">
+                {benimMi ? 'Sen' : karsiTarafEtiket}
+              </span>
               <div
                 className={`max-w-[75%] px-4 py-2.5 rounded-lg text-sm ${
                   benimMi
