@@ -5,6 +5,7 @@ import Link from 'next/link'
 import GeriButonu from '../GeriButonu'
 import { supabase } from '../lib/supabase'
 import { alinanEsyaSayisi, AYLIK_ALMA_HAKKI } from '../lib/kota'
+import { moderasyonEtiketi } from '../lib/moderasyon'
 import type { User } from '@supabase/supabase-js'
 
 type Aday = { gonderen_id: string; gonderen_email: string | null; kotaDolu: boolean }
@@ -20,6 +21,8 @@ type Ilan = {
   durum: string | null
   goruntulenme_sayisi: number | null
   begeni_sayisi: number | null
+  moderasyon_durumu: string | null
+  moderasyon_notu: string | null
 }
 
 export default function Ilanlarim() {
@@ -210,6 +213,8 @@ export default function Ilanlarim() {
         <div className="flex flex-col gap-4">
           {ilanlar.map((ilan) => {
             const aktifMi = ilan.durum !== 'bagislandi'
+            const mod = ilan.moderasyon_durumu ?? 'onaylandi'
+            const modRozet = moderasyonEtiketi(mod)
             const tarih = new Date(ilan.olusturulma_tarihi).toLocaleDateString('tr-TR', {
               day: '2-digit',
               month: '2-digit',
@@ -242,7 +247,20 @@ export default function Ilanlarim() {
                     >
                       {aktifMi ? 'Aktif' : 'Bağışlandı'}
                     </span>
+                    {mod !== 'onaylandi' && (
+                      <span
+                        className={`font-mono-etiket text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${modRozet.sinif}`}
+                      >
+                        {modRozet.metin}
+                      </span>
+                    )}
                   </div>
+
+                  {mod !== 'onaylandi' && ilan.moderasyon_notu && (
+                    <p className="text-xs text-[var(--renk-ink)]/55 mb-1">
+                      {ilan.moderasyon_notu}
+                    </p>
+                  )}
 
                   <Link
                     href={`/ilan/${ilan.id}`}

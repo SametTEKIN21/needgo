@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from './lib/supabase'
 import { profilTamMi } from './lib/profil'
+import { adminMi } from './lib/moderasyon'
 import AuthForm from './AuthForm'
 import IlanForm from './IlanForm'
 import KonumSecici from './KonumSecici'
@@ -283,11 +284,21 @@ export default function Home() {
   })
 
   const ilanlariGetir = async (deneme = 0) => {
-    const { data, error } = await supabase
+    let { data, error } = await supabase
       .from('ilanlar')
       .select('*')
       .eq('durum', 'aktif')
+      .eq('moderasyon_durumu', 'onaylandi')
       .order('olusturulma_tarihi', { ascending: false })
+
+    // moderasyon.sql henüz çalıştırılmadıysa (kolon yok) — eski davranışa düş
+    if (error && /moderasyon_durumu/.test(error.message || '')) {
+      ;({ data, error } = await supabase
+        .from('ilanlar')
+        .select('*')
+        .eq('durum', 'aktif')
+        .order('olusturulma_tarihi', { ascending: false }))
+    }
 
     if (error) {
       // Geçici hataları (ağ / PostgREST şema yeniden yüklemesi) bir kez yeniden dene
@@ -551,6 +562,11 @@ export default function Home() {
                         <Link href="/hesap-ayarlari" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
                           Hesap
                         </Link>
+                        {adminMi(kullanici.email) && (
+                          <Link href="/moderasyon" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
+                            Moderasyon
+                          </Link>
+                        )}
                         <button
                           onClick={() => { setProfilMenuAcik(false); cikisYap() }}
                           className="w-full text-left px-4 py-2 text-sm text-[#B5533C] hover:bg-[var(--renk-kraft)] transition-colors border-t border-[var(--renk-cizgi)] mt-1"

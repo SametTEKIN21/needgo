@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { supabase } from '../../lib/supabase'
 import { kotaDurumu, tarihMetni, type KotaDurumu } from '../../lib/kota'
 import { profilTamMi } from '../../lib/profil'
+import { adminMi, SIKAYET_SEBEPLERI } from '../../lib/moderasyon'
 import type { User } from '@supabase/supabase-js'
 
 type Ilan = {
@@ -21,6 +22,8 @@ type Ilan = {
   olusturulma_tarihi: string
   goruntulenme_sayisi: number | null
   begeni_sayisi: number | null
+  moderasyon_durumu: string | null
+  moderasyon_notu: string | null
 }
 
 export default function IlanDetay() {
@@ -35,6 +38,10 @@ export default function IlanDetay() {
   const [mevcutKonusmaVar, setMevcutKonusmaVar] = useState(false)
   const [begenildi, setBegenildi] = useState(false)
   const [aktifFoto, setAktifFoto] = useState(0)
+  const [sikayetAcik, setSikayetAcik] = useState(false)
+  const [sikayetSebep, setSikayetSebep] = useState('')
+  const [sikayetAciklama, setSikayetAciklama] = useState('')
+  const [sikayetDurumu, setSikayetDurumu] = useState<'' | 'gonderiliyor' | 'gonderildi'>('')
   const sayacArtirildi = useRef(false)
 
   useEffect(() => {
@@ -97,6 +104,24 @@ export default function IlanDetay() {
       begeniliListe.push(ilan.id)
       localStorage.setItem('begenilenIlanlar', JSON.stringify(begeniliListe))
     }
+  }
+
+  const sikayetGonder = async () => {
+    if (!ilan || !kullanici || !sikayetSebep) return
+    setSikayetDurumu('gonderiliyor')
+    const { error } = await supabase.from('sikayetler').insert({
+      ilan_id: ilan.id,
+      sikayet_eden_id: kullanici.id,
+      sikayet_eden_email: kullanici.email,
+      sebep: sikayetSebep,
+      aciklama: sikayetAciklama.trim() || null,
+    })
+    if (error) {
+      setSikayetDurumu('')
+      alert('Şikayet gönderilemedi: ' + error.message)
+      return
+    }
+    setSikayetDurumu('gonderildi')
   }
 
   const mesajGonder = async () => {
@@ -184,6 +209,22 @@ export default function IlanDetay() {
   })
 
   const kendiIlaniMi = kullanici && ilan.user_id === kullanici.id
+  const yonetici = adminMi(kullanici?.email)
+  const onayli = ilan.moderasyon_durumu === 'onaylandi' || !ilan.moderasyon_durumu
+
+  // Onaylanmamış ilanı sadece sahibi ve admin görebilir
+  if (!onayli && !kendiIlaniMi && !yonetici) {
+    return (
+      <div className="min-h-screen bg-[var(--renk-kraft)] flex flex-col items-center justify-center gap-4 px-5 text-center">
+        <p className="text-sm text-[var(--renk-ink)]/50">
+          Bu ilan şu anda görüntülenemiyor (içerik incelemesinde).
+        </p>
+        <Link href="/" className="text-sm font-semibold text-[var(--renk-orman)] hover:underline">
+          Ana sayfaya dön
+        </Link>
+      </div>
+    )
+  }
 
   const fotoListesi: string[] =
     ilan.fotograflar && ilan.fotograflar.length > 0
@@ -241,6 +282,24 @@ export default function IlanDetay() {
           )}
 
           <div className="p-6 sm:p-8">
+            {(kendiIlaniMi || yonetici) && !onayli && (
+              <div
+                className={`mb-4 rounded-lg px-4 py-3 text-sm ${
+                  ilan.moderasyon_durumu === 'reddedildi'
+                    ? 'bg-[#B5533C]/10 text-[#B5533C]'
+                    : 'bg-amber-500/15 text-amber-700'
+                }`}
+              >
+                <p className="font-semibold">
+                  {ilan.moderasyon_durumu === 'reddedildi'
+                    ? 'Bu ilan reddedildi ve yayında değil.'
+                    : 'Bu ilan içerik incelemesinde, henüz yayında değil.'}
+                </p>
+                {ilan.moderasyon_notu && (
+                  <p className="mt-1 opacity-80">{ilan.moderasyon_notu}</p>
+                )}
+              </div>
+            )}
             <div className="flex items-start justify-between gap-4">
               <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--renk-ink)]">
                 {ilan.baslik}
@@ -328,10 +387,94 @@ export default function IlanDetay() {
                   İlan sahibiyle mesajlaşmak için giriş yapmalısın.
                 </p>
               )}
+
+              {!kendiIlaniMi && kullanici && (
+                <button
+                  onClick={() => {
+                    setSikayetAcik(true)
+                    setSikayetDurumu('')
+                  }}
+                  className="mt-3 text-xs text-[var(--renk-ink)]/45 hover:text-[#B5533C] transition-colors"
+                >
+                  ⚑ Bu ilanı şikayet et
+                </button>
+              )}
             </div>
           </div>
         </div>
       </main>
+
+      {sikayetAcik && (
+        <div
+          onClick={() => setSikayetAcik(false)}
+          className="fixed inset-0 bg-[var(--renk-ink)]/50 flex items-center justify-center z-50 px-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[var(--renk-kraft)] border border-[var(--renk-cizgi)] rounded-lg shadow-lg w-full max-w-sm p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)]">
+                İlanı şikayet et
+              </h2>
+              <button
+                onClick={() => setSikayetAcik(false)}
+                className="text-[var(--renk-ink)]/50 hover:text-[var(--renk-ink)] text-lg leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {sikayetDurumu === 'gonderildi' ? (
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-[var(--renk-ink)]/70">
+                  Şikayetin alındı, ekibimiz en kısa sürede inceleyecek. Teşekkürler.
+                </p>
+                <button
+                  onClick={() => setSikayetAcik(false)}
+                  className="self-start px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-white text-sm font-semibold"
+                >
+                  Kapat
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1.5">
+                  {SIKAYET_SEBEPLERI.map((sebep) => (
+                    <label
+                      key={sebep}
+                      className="flex items-center gap-2 text-sm text-[var(--renk-ink)]"
+                    >
+                      <input
+                        type="radio"
+                        name="sikayet-sebep"
+                        value={sebep}
+                        checked={sikayetSebep === sebep}
+                        onChange={(e) => setSikayetSebep(e.target.value)}
+                      />
+                      {sebep}
+                    </label>
+                  ))}
+                </div>
+                <textarea
+                  value={sikayetAciklama}
+                  onChange={(e) => setSikayetAciklama(e.target.value)}
+                  rows={3}
+                  placeholder="Açıklama (isteğe bağlı)"
+                  className="px-3 py-2.5 bg-white border border-[var(--renk-cizgi)] rounded-md text-sm text-neutral-900 placeholder:text-[var(--renk-ink)]/40 focus:outline-none focus:ring-2 focus:ring-[var(--renk-orman)]/40 resize-none"
+                />
+                <button
+                  onClick={sikayetGonder}
+                  disabled={!sikayetSebep || sikayetDurumu === 'gonderiliyor'}
+                  className="self-start px-5 py-2.5 rounded-full bg-[#B5533C] text-white text-sm font-semibold hover:brightness-95 transition disabled:opacity-50"
+                >
+                  {sikayetDurumu === 'gonderiliyor' ? 'Gönderiliyor…' : 'Şikayeti Gönder'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
