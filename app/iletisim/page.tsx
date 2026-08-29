@@ -9,10 +9,10 @@ export default function Iletisim() {
           gönderebilirsiniz.
         </p>
         <a
-          href="mailto:destek@needgo.com"
+          href="mailto:destek.needgo@gmail.com"
           className="inline-block self-start text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-[var(--renk-kraft)] hover:bg-[var(--renk-orman-koyu)] transition-colors"
         >
-          destek@needgo.com
+          destek.needgo@gmail.com
         </a>
         <p className="text-xs text-[var(--renk-ink)]/50 mt-4">
           İstanbul, Türkiye

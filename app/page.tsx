@@ -87,6 +87,12 @@ const HEDEF_KITLELER = [
     no: '01',
     baslik: 'Öğrenciler için',
     aciklama: 'Ders kitabından mini buzdolabına, yurt/ev ihtiyacın burada.',
+    maddeler: [
+      'Yeni üniversite kazananlar',
+      'Üniversite değişikliğiyle şehir değiştirenler',
+      'Yurt bulamayan öğrenciler',
+      'Yeni öğrenci evi kurmak isteyen öğrenciler',
+    ],
     kategori: 'Ofis & Kırtasiye',
     ikon: 'kep',
   },
@@ -94,6 +100,11 @@ const HEDEF_KITLELER = [
     no: '02',
     baslik: 'Yeni eve taşınanlar için',
     aciklama: 'Sıfırdan ev kuruyorsun, kullanışlı mobilya ve eşyalar seni bekliyor.',
+    maddeler: [
+      'Yeni bir şehre atananlar',
+      'Görevden dolayı şehir değiştirenler',
+      'Geçici görevle yer değişikliği yaşayanlar',
+    ],
     kategori: 'Mobilya',
     ikon: 'ev',
   },
@@ -101,6 +112,11 @@ const HEDEF_KITLELER = [
     no: '03',
     baslik: 'İşletmeler için',
     aciklama: 'Ofis ekipmanından depo malzemesine, işletmene lazım olanı bul.',
+    maddeler: [
+      'Kafeler',
+      'Restoranlar',
+      'Geçici ofis açanlar',
+    ],
     kategori: 'Elektronik',
     ikon: 'canta',
   },
@@ -266,7 +282,7 @@ export default function Home() {
     return kategoriUyuyor && aramaUyuyor && konumUyuyor
   })
 
-  const ilanlariGetir = async () => {
+  const ilanlariGetir = async (deneme = 0) => {
     const { data, error } = await supabase
       .from('ilanlar')
       .select('*')
@@ -274,10 +290,19 @@ export default function Home() {
       .order('olusturulma_tarihi', { ascending: false })
 
     if (error) {
-      console.error(error)
-    } else {
-      setIlanlar(data as Ilan[])
+      // Geçici hataları (ağ / PostgREST şema yeniden yüklemesi) bir kez yeniden dene
+      if (deneme < 2) {
+        setTimeout(() => ilanlariGetir(deneme + 1), 1500)
+        return
+      }
+      console.error(
+        'İlanlar yüklenemedi:',
+        error.message || error.code || JSON.stringify(error)
+      )
+      return
     }
+
+    setIlanlar(data as Ilan[])
   }
 
   const mesajlariGorulduIsaretle = () => {
@@ -782,9 +807,24 @@ export default function Home() {
                       <h3 className="font-display text-lg font-semibold text-[var(--renk-ink)] mb-2">
                         {kitle.baslik}
                       </h3>
-                      <p className="text-xs text-[var(--renk-ink)]/60 mb-4 flex-1 overflow-y-auto">
-                        {kitle.aciklama}
-                      </p>
+                      <div className="mb-4 flex-1 overflow-y-auto">
+                        <p className="text-xs text-[var(--renk-ink)]/60">
+                          {kitle.aciklama}
+                        </p>
+                        {kitle.maddeler && kitle.maddeler.length > 0 && (
+                          <ul className="mt-3 space-y-1.5">
+                            {kitle.maddeler.map((madde) => (
+                              <li
+                                key={madde}
+                                className="flex items-start gap-2 text-xs text-[var(--renk-ink)]/70"
+                              >
+                                <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
+                                <span>{madde}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                       <button
                         onClick={(e) => {
                           e.stopPropagation()

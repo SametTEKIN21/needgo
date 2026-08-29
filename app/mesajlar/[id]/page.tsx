@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabase'
 import type { User } from '@supabase/supabase-js'
@@ -23,12 +23,14 @@ type Konusma = {
 
 export default function MesajDetay() {
   const params = useParams()
+  const router = useRouter()
   const [kullanici, setKullanici] = useState<User | null>(null)
   const [konusma, setKonusma] = useState<Konusma | null>(null)
   const [mesajlar, setMesajlar] = useState<Mesaj[]>([])
   const [yeniMesaj, setYeniMesaj] = useState('')
   const [yukleniyor, setYukleniyor] = useState(true)
   const [gonderiliyor, setGonderiliyor] = useState(false)
+  const [siliniyor, setSiliniyor] = useState(false)
   const sonRef = useRef<HTMLDivElement>(null)
 
   const mesajlariGetir = async () => {
@@ -90,6 +92,36 @@ export default function MesajDetay() {
     }
   }
 
+  const konusmayiSil = async () => {
+    if (siliniyor) return
+    const onay = window.confirm(
+      'Bu konuşma ve içindeki tüm mesajlar kalıcı olarak silinecek. İş bittiyse gereksiz veriyi temizlemek için onayla.'
+    )
+    if (!onay) return
+
+    setSiliniyor(true)
+    // Önce mesajlar, sonra konuşma (FK kısıtı için sıra önemli)
+    const { error: mesajHata } = await supabase
+      .from('mesajlar')
+      .delete()
+      .eq('konusma_id', params.id)
+    const { error: konusmaHata } = mesajHata
+      ? { error: mesajHata }
+      : await supabase.from('konusmalar').delete().eq('id', params.id)
+    setSiliniyor(false)
+
+    const hata = mesajHata || konusmaHata
+    if (hata) {
+      console.error('Konuşma silme hatası:', hata)
+      alert(
+        `Konuşma silinemedi: ${hata.message}\n\n` +
+          'Silme yetkisi (RLS) tanımlı değilse supabase/mesaj-silme.sql dosyasını Supabase SQL Editor’da çalıştır.'
+      )
+      return
+    }
+    router.replace('/mesajlar')
+  }
+
   if (yukleniyor) {
     return (
       <div className="min-h-screen bg-[var(--renk-kraft)] flex items-center justify-center">
@@ -119,12 +151,23 @@ export default function MesajDetay() {
               {konusma.ilanlar?.baslik || 'İlan'}
             </p>
           </div>
-          <Link
-            href={`/ilan/${konusma.ilan_id}`}
-            className="text-xs font-medium px-3 py-1.5 rounded-full border border-[var(--renk-ink)]/20 text-[var(--renk-ink)] hover:bg-[var(--renk-ink)] hover:text-[var(--renk-kraft)] transition-colors shrink-0"
-          >
-            İlanı Gör
-          </Link>
+          <div className="flex items-center gap-2 shrink-0">
+            <Link
+              href={`/ilan/${konusma.ilan_id}`}
+              className="text-xs font-medium px-3 py-1.5 rounded-full border border-[var(--renk-ink)]/20 text-[var(--renk-ink)] hover:bg-[var(--renk-ink)] hover:text-[var(--renk-kraft)] transition-colors"
+            >
+              İlanı Gör
+            </Link>
+            <button
+              type="button"
+              onClick={konusmayiSil}
+              disabled={siliniyor}
+              title="İş bittiyse konuşmayı ve mesajları sil"
+              className="text-xs font-medium px-3 py-1.5 rounded-full border border-red-500/30 text-red-600 hover:bg-red-600 hover:text-white transition-colors disabled:opacity-60"
+            >
+              {siliniyor ? 'Siliniyor…' : 'Konuşmayı Sil'}
+            </button>
+          </div>
         </div>
       </header>
 

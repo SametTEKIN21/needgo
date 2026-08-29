@@ -81,7 +81,7 @@ export default function HesapAyarlari() {
     const govde = encodeURIComponent(
       `Merhaba,\n\n${kullanici?.email} adresiyle kayıtlı hesabımın kalıcı olarak silinmesini talep ediyorum.\n\nTeşekkürler.`
     )
-    window.location.href = `mailto:destek@needgo.com?subject=${konu}&body=${govde}`
+    window.location.href = `mailto:destek.needgo@gmail.com?subject=${konu}&body=${govde}`
   }
 
   if (!kontrolBitti) {
