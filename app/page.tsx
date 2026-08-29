@@ -52,6 +52,36 @@ const KATEGORI_BILGI: Record<string, { emoji: string; bg: string }> = {
 const KITLE_PANEL_BG = '#E3F0FF'
 const KITLE_PANEL_RENK = '#0066FF'
 
+// Hero slaytları — 1. slayt orijinal metin, sonrakiler bilgi slaytları
+const HERO_BILGI_SLAYTLARI = [
+  {
+    baslik: 'Çevre Koruma ve Sıfır Atık',
+    aciklama:
+      'Kullanılabilir durumdaki eşyaların çöp sahalarına gitmesini engelleyerek atık oluşumunu azaltır ve karbon ayak izini düşürmeye doğrudan katkı sağlar.',
+  },
+  {
+    baslik: 'Döngüsel Ekonomi ve Kaynak Verimliliği',
+    aciklama:
+      'Eşyaların kullanım ömrünü tek bir sahipten öteye taşıyarak kaynakların yeniden ve verimli bir şekilde değerlendirilmesini destekler.',
+  },
+  {
+    baslik: 'Sosyal Dayanışma ve Komşuluk',
+    aciklama:
+      'İhtiyaç sahibi kişilerle eşya paylaşmak isteyenleri para ve komisyon olmaksızın bir araya getirerek toplumsal dayanışmayı güçlendirir.',
+  },
+  {
+    baslik: 'Öğrenci ve Ev Kuracaklara Destek',
+    aciklama:
+      'Öğrencilerin kitap, ders aracı veya eşya ihtiyaçlarını; yeni eve taşınanların ise mobilya ve ev gereksinimlerini bütçe yükü olmadan karşılamalarına imkan tanır.',
+  },
+  {
+    baslik: 'STK ve Kurumsal İhtiyaç Kanalları',
+    aciklama:
+      'Dernekler, topluluklar veya belediyeler için ihtiyaç sahibi ailelere ulaştırılmak üzere toplu eşya temin edilebilecek sürdürülebilir bir kaynak oluşturur.',
+  },
+]
+const HERO_SLAYT_SAYISI = HERO_BILGI_SLAYTLARI.length + 1
+
 const HEDEF_KITLELER = [
   {
     no: '01',
@@ -220,6 +250,8 @@ export default function Home() {
   const [aramaMetni, setAramaMetni] = useState('')
   const [aktifKitleIndex, setAktifKitleIndex] = useState<number | null>(null)
   const [okunmamisMesaj, setOkunmamisMesaj] = useState(0)
+  const [aktifSlayt, setAktifSlayt] = useState(0)
+  const [slaytDurdu, setSlaytDurdu] = useState(false)
 
   const gosterilenIlanlar = ilanlar.filter((ilan) => {
     const kategoriUyuyor = seciliKategori
@@ -316,6 +348,15 @@ export default function Home() {
     }
   }, [])
 
+  useEffect(() => {
+    if (slaytDurdu) return
+    const t = setInterval(
+      () => setAktifSlayt((s) => (s + 1) % HERO_SLAYT_SAYISI),
+      6500
+    )
+    return () => clearInterval(t)
+  }, [slaytDurdu])
+
   const cikisYap = async () => {
     await supabase.auth.signOut()
   }
@@ -346,6 +387,26 @@ export default function Home() {
     setSeciliKategori(null)
     setTumKategorilerAcik(false)
   }
+
+  const slaytGit = (yon: number) =>
+    setAktifSlayt((s) => (s + yon + HERO_SLAYT_SAYISI) % HERO_SLAYT_SAYISI)
+
+  const heroButonlari = (
+    <div className="flex items-center justify-center gap-3 mt-7">
+      <button
+        onClick={ilanVerTiklandi}
+        className="text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-ocre)] text-white hover:brightness-95 transition"
+      >
+        İlan Ver
+      </button>
+      <a
+        href="#ilanlar"
+        className="text-sm font-semibold px-5 py-2.5 rounded-full border border-[var(--renk-ink)]/20 text-[var(--renk-ink)] hover:border-[var(--renk-ink)] transition"
+      >
+        İlanlara Göz At
+      </a>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-[var(--renk-kraft)] flex flex-col">
@@ -588,34 +649,89 @@ export default function Home() {
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[360px] h-[360px] rounded-full bg-[#7cc0ff]/12 blur-[120px]" />
         </div>
         <HeroKolaj />
-        <div className="relative z-10 max-w-6xl mx-auto px-5 pt-14 pb-16 w-full">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center">
-            <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
-              Atma · Paylaş · Dönüştür
-            </p>
-            <h1 className="font-display text-3xl sm:text-5xl font-semibold text-[var(--renk-ink)] tracking-tight">
-              Kullanmadığın eşya, birinin ihtiyacı olsun.
-            </h1>
-            <p className="text-[var(--renk-ink)]/60 mt-4 max-w-md mx-auto text-sm sm:text-base">
-              NeedGO&apos;da her şey ücretsiz, sadece paylaşım geçer.
-            </p>
-            <p className="font-display italic text-[var(--renk-orman)] text-base sm:text-lg mt-3">
-              Paylaşmak iyileştirir.
-            </p>
-            <div className="flex items-center justify-center gap-3 mt-7">
-              <button
-                onClick={ilanVerTiklandi}
-                className="text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-ocre)] text-white hover:brightness-95 transition"
+        <div className="relative z-10 max-w-6xl mx-auto px-5 pt-14 pb-12 w-full">
+          <div
+            className="relative max-w-2xl mx-auto"
+            onMouseEnter={() => setSlaytDurdu(true)}
+            onMouseLeave={() => setSlaytDurdu(false)}
+          >
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                style={{ transform: `translateX(-${aktifSlayt * 100}%)` }}
               >
-                İlan Ver
-              </button>
-              <a href="#ilanlar" className="text-sm font-semibold px-5 py-2.5 rounded-full border border-[var(--renk-ink)]/20 text-[var(--renk-ink)] hover:border-[var(--renk-ink)] transition">
-                İlanlara Göz At
-              </a>
+                {/* 1. slayt — orijinal metin */}
+                <div className="w-full shrink-0 px-2">
+                  <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
+                    <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
+                      Atma · Paylaş · Dönüştür
+                    </p>
+                    <h1 className="font-display text-3xl sm:text-5xl font-semibold text-[var(--renk-ink)] tracking-tight">
+                      Kullanmadığın eşya, birinin ihtiyacı olsun.
+                    </h1>
+                    <p className="text-[var(--renk-ink)]/60 mt-4 max-w-md mx-auto text-sm sm:text-base">
+                      NeedGO&apos;da her şey ücretsiz, sadece paylaşım geçer.
+                    </p>
+                    <p className="font-display italic text-[var(--renk-orman)] text-base sm:text-lg mt-3">
+                      Paylaşmak iyileştirir.
+                    </p>
+                    {heroButonlari}
+                  </div>
+                </div>
+
+                {/* Bilgi slaytları */}
+                {HERO_BILGI_SLAYTLARI.map((slayt) => (
+                  <div key={slayt.baslik} className="w-full shrink-0 px-2">
+                    <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
+                      <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
+                        Neden NeedGO?
+                      </p>
+                      <h2 className="font-display text-2xl sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight max-w-xl">
+                        {slayt.baslik}
+                      </h2>
+                      <p className="text-[var(--renk-ink)]/60 mt-4 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
+                        {slayt.aciklama}
+                      </p>
+                      {heroButonlari}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => slaytGit(-1)}
+              aria-label="Önceki"
+              className="absolute left-0 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/85 backdrop-blur border border-[var(--renk-cizgi)] text-[var(--renk-ink)]/60 hover:text-[var(--renk-orman)] flex items-center justify-center text-lg leading-none"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              onClick={() => slaytGit(1)}
+              aria-label="Sonraki"
+              className="absolute right-0 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/85 backdrop-blur border border-[var(--renk-cizgi)] text-[var(--renk-ink)]/60 hover:text-[var(--renk-orman)] flex items-center justify-center text-lg leading-none"
+            >
+              ›
+            </button>
+
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {Array.from({ length: HERO_SLAYT_SAYISI }).map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setAktifSlayt(i)}
+                  aria-label={`${i + 1}. slayt`}
+                  className={`h-2 rounded-full transition-all ${
+                    i === aktifSlayt
+                      ? 'w-6 bg-[var(--renk-orman)]'
+                      : 'w-2 bg-[var(--renk-ink)]/20 hover:bg-[var(--renk-ink)]/40'
+                  }`}
+                />
+              ))}
             </div>
           </div>
-        </div>
         </div>
       </section>
 
