@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import GeriButonu from '../GeriButonu'
 import { supabase } from '../lib/supabase'
 import type { User } from '@supabase/supabase-js'
 
@@ -105,10 +106,13 @@ export default function HesapAyarlari() {
   return (
     <div className="min-h-screen bg-[var(--renk-kraft)]">
       <header className="sticky top-0 z-40 bg-[var(--renk-kraft)]/95 backdrop-blur border-b border-[var(--renk-cizgi)]">
-        <div className="max-w-2xl mx-auto px-5 h-16 flex items-center justify-between">
-          <Link href="/" className="font-display text-2xl font-semibold text-[var(--renk-ink)] tracking-tight">
-            NeedGO
-          </Link>
+        <div className="max-w-2xl mx-auto px-5 h-16 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <GeriButonu />
+            <Link href="/" className="font-display text-2xl font-semibold text-[var(--renk-ink)] tracking-tight">
+              NeedGO
+            </Link>
+          </div>
           <Link
             href="/"
             className="text-xs font-medium px-3 py-1.5 rounded-full border border-[var(--renk-ink)]/20 text-[var(--renk-ink)] hover:bg-[var(--renk-ink)] hover:text-[var(--renk-kraft)] transition-colors"

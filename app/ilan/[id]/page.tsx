@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabase'
+import { kotaDurumu, tarihMetni, type KotaDurumu } from '../../lib/kota'
 import type { User } from '@supabase/supabase-js'
 
 type Ilan = {
@@ -28,6 +29,9 @@ export default function IlanDetay() {
   const [kullanici, setKullanici] = useState<User | null>(null)
   const [yukleniyor, setYukleniyor] = useState(true)
   const [mesajGonderiliyor, setMesajGonderiliyor] = useState(false)
+  const [kota, setKota] = useState<KotaDurumu | null>(null)
+  const [kotaHata, setKotaHata] = useState('')
+  const [mevcutKonusmaVar, setMevcutKonusmaVar] = useState(false)
   const [begenildi, setBegenildi] = useState(false)
   const [aktifFoto, setAktifFoto] = useState(0)
   const sayacArtirildi = useRef(false)
@@ -45,6 +49,17 @@ export default function IlanDetay() {
 
       if (!error) {
         setIlan(data as Ilan)
+
+        if (userData.user && (data as Ilan).user_id !== userData.user.id) {
+          kotaDurumu(userData.user.id).then(setKota).catch(() => {})
+          supabase
+            .from('konusmalar')
+            .select('id')
+            .eq('ilan_id', (data as Ilan).id)
+            .eq('gonderen_id', userData.user.id)
+            .maybeSingle()
+            .then(({ data: k }) => setMevcutKonusmaVar(!!k))
+        }
 
         if (!sayacArtirildi.current) {
           sayacArtirildi.current = true
@@ -86,6 +101,7 @@ export default function IlanDetay() {
   const mesajGonder = async () => {
     if (!ilan || !kullanici) return
 
+    setKotaHata('')
     setMesajGonderiliyor(true)
 
     const { data: mevcut } = await supabase
@@ -100,12 +116,26 @@ export default function IlanDetay() {
       return
     }
 
+    // Yeni istek — kota dolu ise engelle
+    if (kota && kota.kalan === 0) {
+      setMesajGonderiliyor(false)
+      setKotaHata(
+        kota.yenilenmeTarihi
+          ? `Son 30 günde 3 eşya aldın. Yeni istek gönderebilmen için ${tarihMetni(
+              kota.yenilenmeTarihi
+            )} tarihini beklemelisin.`
+          : 'Son 30 günde 3 eşya aldın. Yeni istek gönderemezsin.'
+      )
+      return
+    }
+
     const { data: yeniKonusma, error } = await supabase
       .from('konusmalar')
       .insert({
         ilan_id: ilan.id,
         gonderen_id: kullanici.id,
         alici_id: ilan.user_id,
+        gonderen_email: kullanici.email,
       })
       .select('id')
       .single()
@@ -239,15 +269,42 @@ export default function IlanDetay() {
                   Bu senin kendi ilanın.
                 </p>
               )}
-              {!kendiIlaniMi && kullanici && (
-                <button
-                  onClick={mesajGonder}
-                  disabled={mesajGonderiliyor}
-                  className="inline-block text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-[var(--renk-kraft)] hover:bg-[var(--renk-orman-koyu)] transition-colors disabled:opacity-60"
-                >
-                  {mesajGonderiliyor ? 'Açılıyor…' : 'Mesaj Gönder'}
-                </button>
-              )}
+              {!kendiIlaniMi && kullanici && (() => {
+                const kotaDolu = !!kota && kota.kalan === 0 && !mevcutKonusmaVar
+                return (
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={mesajGonder}
+                      disabled={mesajGonderiliyor || kotaDolu}
+                      className="self-start inline-block text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-[var(--renk-kraft)] hover:bg-[var(--renk-orman-koyu)] transition-colors disabled:opacity-60"
+                    >
+                      {mesajGonderiliyor
+                        ? 'Açılıyor…'
+                        : mevcutKonusmaVar
+                        ? 'Sohbete Dön'
+                        : 'Mesaj Gönder'}
+                    </button>
+
+                    {kotaDolu && (
+                      <p className="text-xs text-[#B5533C]">
+                        {kota?.yenilenmeTarihi
+                          ? `Son 30 günde 3 eşya aldın. Yeni istek gönderebilmen için ${tarihMetni(
+                              kota.yenilenmeTarihi
+                            )} tarihini beklemelisin.`
+                          : 'Son 30 günde 3 eşya aldın. Yeni istek gönderemezsin.'}
+                      </p>
+                    )}
+                    {!kotaDolu && kotaHata && (
+                      <p className="text-xs text-[#B5533C]">{kotaHata}</p>
+                    )}
+                    {!kotaDolu && !mevcutKonusmaVar && kota && kota.kalan > 0 && kota.kalan < 3 && (
+                      <p className="text-xs text-[var(--renk-ink)]/50">
+                        Kalan alma hakkın: {kota.kalan}/3 (son 30 gün)
+                      </p>
+                    )}
+                  </div>
+                )
+              })()}
               {!kendiIlaniMi && !kullanici && (
                 <p className="text-xs text-[var(--renk-ink)]/50">
                   İlan sahibiyle mesajlaşmak için giriş yapmalısın.

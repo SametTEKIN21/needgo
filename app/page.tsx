@@ -216,6 +216,7 @@ export default function Home() {
   const [seciliKonum, setSeciliKonum] = useState<string | null>(null)
   const [aramaMetni, setAramaMetni] = useState('')
   const [aktifKitleIndex, setAktifKitleIndex] = useState<number | null>(null)
+  const [okunmamisMesaj, setOkunmamisMesaj] = useState(0)
 
   const gosterilenIlanlar = ilanlar.filter((ilan) => {
     const kategoriUyuyor = seciliKategori
@@ -244,19 +245,71 @@ export default function Home() {
     }
   }
 
+  const mesajlariGorulduIsaretle = () => {
+    setOkunmamisMesaj(0)
+    try {
+      localStorage.setItem('needgo-mesaj-son-goruldu', new Date().toISOString())
+    } catch {
+      /* localStorage yoksa geç */
+    }
+  }
+
+  const okunmamisMesajlariGetir = async (uid: string | undefined) => {
+    if (!uid) {
+      setOkunmamisMesaj(0)
+      return
+    }
+    const { data: konusmalar } = await supabase
+      .from('konusmalar')
+      .select('id')
+      .or(`gonderen_id.eq.${uid},alici_id.eq.${uid}`)
+
+    const ids = (konusmalar ?? []).map((k) => k.id)
+    if (ids.length === 0) {
+      setOkunmamisMesaj(0)
+      return
+    }
+
+    let sonGoruldu = '1970-01-01T00:00:00Z'
+    try {
+      sonGoruldu = localStorage.getItem('needgo-mesaj-son-goruldu') || sonGoruldu
+    } catch {
+      /* localStorage yoksa geç */
+    }
+
+    const { count } = await supabase
+      .from('mesajlar')
+      .select('id', { count: 'exact', head: true })
+      .in('konusma_id', ids)
+      .neq('gonderen_id', uid)
+      .gt('olusturulma_tarihi', sonGoruldu)
+
+    setOkunmamisMesaj(count ?? 0)
+  }
+
   useEffect(() => {
     ilanlariGetir()
 
     supabase.auth.getUser().then(({ data }) => {
       setKullanici(data.user)
+      okunmamisMesajlariGetir(data.user?.id)
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setKullanici(session?.user ?? null)
+      okunmamisMesajlariGetir(session?.user?.id)
     })
+
+    const yenile = () => {
+      supabase.auth.getUser().then(({ data }) => okunmamisMesajlariGetir(data.user?.id))
+    }
+    const aralik = setInterval(yenile, 30000)
+    window.addEventListener('focus', yenile)
 
     return () => {
       listener.subscription.unsubscribe()
+      clearInterval(aralik)
+      window.removeEventListener('focus', yenile)
     }
   }, [])
 
@@ -331,22 +384,43 @@ export default function Home() {
             <div className="flex items-center gap-3 shrink-0">
               <Link
                 href="/mesajlar"
-                aria-label="Mesajlar"
-                className="hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
+                onClick={mesajlariGorulduIsaretle}
+                aria-label={okunmamisMesaj > 0 ? `Mesajlar (${okunmamisMesaj} yeni)` : 'Mesajlar'}
+                className="relative hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
                 </svg>
+                {okunmamisMesaj > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#B5533C] text-white text-[10px] font-semibold flex items-center justify-center">
+                    {okunmamisMesaj > 9 ? '9+' : okunmamisMesaj}
+                  </span>
+                )}
               </Link>
-              <button
-                type="button"
+              <Link
+                href="/mesajlar"
+                onClick={mesajlariGorulduIsaretle}
                 aria-label="Bildirimler"
-                className="hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
+                className="relative hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
                   <path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
+                {okunmamisMesaj > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#B5533C] ring-2 ring-white" />
+                )}
+              </Link>
+
+              <button
+                onClick={ilanVerTiklandi}
+                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition-colors"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 8a2 2 0 0 1 2-2h1.2a2 2 0 0 0 1.7-.9l.6-.9a2 2 0 0 1 1.7-.9h3.6a2 2 0 0 1 1.7.9l.6.9a2 2 0 0 0 1.7.9H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                  <circle cx="12" cy="12.5" r="3.2" stroke="currentColor" strokeWidth="2" />
+                </svg>
+                İlan Ver
               </button>
 
               {kullanici ? (
@@ -371,10 +445,13 @@ export default function Home() {
                         <p className="px-4 py-2 text-xs text-[var(--renk-ink)]/50 truncate border-b border-[var(--renk-cizgi)] mb-1">
                           {kullanici.email}
                         </p>
+                        <Link href="/profil" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
+                          Profil
+                        </Link>
                         <Link href="/ilanlarim" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
                           İlanlarım
                         </Link>
-                        <Link href="/mesajlar" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
+                        <Link href="/mesajlar" onClick={() => { setProfilMenuAcik(false); mesajlariGorulduIsaretle() }} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
                           Mesajlar
                         </Link>
                         <Link href="/hesap-ayarlari" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
@@ -398,16 +475,6 @@ export default function Home() {
                   Giriş Yap
                 </button>
               )}
-              <button
-                onClick={ilanVerTiklandi}
-                className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition-colors"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M3 8a2 2 0 0 1 2-2h1.2a2 2 0 0 0 1.7-.9l.6-.9a2 2 0 0 1 1.7-.9h3.6a2 2 0 0 1 1.7.9l.6.9a2 2 0 0 0 1.7.9H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  <circle cx="12" cy="12.5" r="3.2" stroke="currentColor" strokeWidth="2" />
-                </svg>
-                İlan Ver
-              </button>
             </div>
           </div>
         </div>

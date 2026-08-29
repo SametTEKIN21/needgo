@@ -41,6 +41,11 @@ export default function MesajDetay() {
     if (data) {
       setMesajlar(data as Mesaj[])
     }
+    try {
+      localStorage.setItem('needgo-mesaj-son-goruldu', new Date().toISOString())
+    } catch {
+      /* localStorage yoksa geç */
+    }
   }
 
   useEffect(() => {
@@ -156,7 +161,7 @@ export default function MesajDetay() {
             value={yeniMesaj}
             onChange={(e) => setYeniMesaj(e.target.value)}
             placeholder="Mesaj yaz…"
-            className="flex-1 px-4 py-2.5 bg-white border border-[var(--renk-cizgi)] rounded-full text-sm outline-none focus:ring-2 focus:ring-[var(--renk-orman)]/40"
+            className="flex-1 px-4 py-2.5 bg-white border border-[var(--renk-cizgi)] rounded-full text-sm text-[#111] caret-[#111] placeholder:text-[var(--renk-ink)]/40 outline-none focus:ring-2 focus:ring-[var(--renk-orman)]/40"
           />
           <button
             type="submit"
