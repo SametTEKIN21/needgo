@@ -858,9 +858,6 @@ export default function Home() {
 
                 {/* metin */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-mono-etiket text-sm text-[var(--renk-ink)]/25 mb-2">
-                    {kitle.no}.
-                  </p>
                   <h3 className="font-display text-2xl sm:text-[32px] leading-tight font-semibold text-[var(--renk-ink)] tracking-tight">
                     {kitle.baslik}
                   </h3>
