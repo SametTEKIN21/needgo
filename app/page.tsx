@@ -49,8 +49,7 @@ const KATEGORI_BILGI: Record<string, { emoji: string; bg: string }> = {
   'Antika': { emoji: '🏺', bg: '#E1F0FA' },
 }
 
-// Tüm kartlarda sabit kalan panel rengi — kart bazlı renk farkı yok
-const KITLE_PANEL_BG = '#E1F0FA'
+// Fotoğrafı yüklenmemiş kitle satırlarında görünen ikon rengi
 const KITLE_PANEL_RENK = '#058ED9'
 
 // Hero slaytları — 1. slayt orijinal metin, sonrakiler bilgi slaytları
@@ -96,6 +95,7 @@ const HEDEF_KITLELER = [
     ],
     kategori: 'Ofis & Kırtasiye',
     ikon: 'kep',
+    foto: '/kitle/ogrenci.jpg',
   },
   {
     no: '02',
@@ -108,6 +108,7 @@ const HEDEF_KITLELER = [
     ],
     kategori: 'Mobilya',
     ikon: 'ev',
+    foto: '/kitle/tasinan.jpg',
   },
   {
     no: '03',
@@ -120,46 +121,18 @@ const HEDEF_KITLELER = [
     ],
     kategori: 'Elektronik',
     ikon: 'canta',
+    foto: '/kitle/isletme.jpg',
   },
   {
     no: '04',
     baslik: 'STK, Dernek ve Belediyeler İçin',
     aciklama: 'İhtiyaç sahibi ailelere ulaştırmak isteyen kurumlar için toplu eşya kaynağı.',
+    maddeler: [] as string[],
     kategori: '',
     ikon: 'kalp',
+    foto: '/kitle/stk.jpg',
   },
 ]
-
-// Kartlar boştayken görünen dekoratif kare deseni (Parley referansındaki gibi) — mavi tonlar
-const KARE_DESENI = [
-  { top: '14%', left: '54%', boyut: 22, renk: '#058ED9' },
-  { top: '30%', left: '38%', boyut: 16, renk: '#8FCDEC' },
-  { top: '34%', left: '66%', boyut: 14, renk: '#8FCDEC' },
-  { top: '48%', left: '28%', boyut: 18, renk: '#058ED9' },
-  { top: '52%', left: '50%', boyut: 16, renk: '#058ED9' },
-  { top: '62%', left: '18%', boyut: 14, renk: '#8FCDEC' },
-  { top: '70%', left: '60%', boyut: 16, renk: '#058ED9' },
-]
-
-function KareDeseni() {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      {KARE_DESENI.map((k, i) => (
-        <span
-          key={i}
-          className="absolute rounded-[3px] transition-transform duration-500"
-          style={{
-            top: k.top,
-            left: k.left,
-            width: k.boyut,
-            height: k.boyut,
-            backgroundColor: k.renk,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
 
 // Hero'nun arkasında süzülen eşya fotoğrafı kolajı — çevre kenarlarda görünür,
 // ortaya doğru radyal maske ile silinir ki metin okunur kalsın.
@@ -322,7 +295,6 @@ export default function Home() {
   const [seciliKategori, setSeciliKategori] = useState<string | null>(null)
   const [seciliKonum, setSeciliKonum] = useState<string | null>(null)
   const [aramaMetni, setAramaMetni] = useState('')
-  const [aktifKitleIndex, setAktifKitleIndex] = useState<number | null>(null)
   const [okunmamisMesaj, setOkunmamisMesaj] = useState(0)
   const [aktifSlayt, setAktifSlayt] = useState(0)
   const [slaytDurdu, setSlaytDurdu] = useState(false)
@@ -848,78 +820,73 @@ export default function Home() {
       <section className="relative overflow-hidden w-full bg-[var(--renk-zemin-vurgu)] border-b border-[var(--renk-cizgi)]">
         <KitleZemini />
         <div className="relative z-10 max-w-6xl mx-auto px-5 py-14">
-        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-6">
+        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-8">
           Kimler için NeedGO ?
         </h2>
 
-        <div
-          className="flex flex-col md:flex-row gap-4 md:h-[430px]"
-          onMouseLeave={() => setAktifKitleIndex(null)}
-        >
+        <div className="border-y border-[var(--renk-cizgi)]">
           {HEDEF_KITLELER.map((kitle, i) => {
-            const aktif = aktifKitleIndex === i
+            const fotoSolda = i % 2 === 0
             return (
               <div
                 key={kitle.baslik}
-                onMouseEnter={() => setAktifKitleIndex(i)}
-                onClick={() => setAktifKitleIndex(aktif ? null : i)}
-                style={{ flexGrow: aktif ? 1.5 : 1, transition: 'flex-grow 480ms cubic-bezier(0.4, 0, 0.2, 1)' }}
-                className="relative basis-auto md:basis-0 min-h-[230px] md:min-h-0 bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-xl overflow-hidden cursor-pointer flex flex-col"
+                className={`flex flex-col gap-6 md:gap-12 py-10 md:py-12 md:items-center ${
+                  i > 0 ? 'border-t border-[var(--renk-cizgi)]' : ''
+                } ${fotoSolda ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
-                {!aktif ? (
-                  <>
-                    <p className="font-mono-etiket text-3xl text-[var(--renk-ink)]/15 px-5 pt-5">
-                      {kitle.no}.
-                    </p>
-                    <div className="flex-1 relative">
-                      <KareDeseni />
+                {/* foto */}
+                <div className="w-full md:w-[38%] lg:w-[34%] shrink-0">
+                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[var(--renk-zemin-vurgu)] border border-[var(--renk-cizgi)]">
+                    {/* fotoğraf yüklenemezse arkadaki ikon görünür */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="scale-[2.4] opacity-40">
+                        <HedefKitleIkon tur={kitle.ikon} renk={KITLE_PANEL_RENK} />
+                      </span>
                     </div>
-                    <p className="font-display text-sm font-semibold text-[var(--renk-ink)] px-5 pb-5 leading-snug">
-                      {kitle.baslik}
-                    </p>
-                  </>
-                ) : (
-                  <div className="flex flex-col md:h-full p-3">
-                    <div
-                      className="rounded-lg flex items-center justify-center shrink-0 h-28 md:h-40"
-                      style={{ backgroundColor: KITLE_PANEL_BG }}
-                    >
-                      <HedefKitleIkon tur={kitle.ikon} renk={KITLE_PANEL_RENK} />
-                    </div>
-                    <div className="pt-4 px-1 pb-1 flex flex-col md:flex-1 min-w-0 md:overflow-hidden">
-                      <h3 className="font-display text-lg font-semibold text-[var(--renk-ink)] mb-2">
-                        {kitle.baslik}
-                      </h3>
-                      <div className="mb-4 md:flex-1 md:overflow-y-auto">
-                        <p className="text-xs text-[var(--renk-ink)]/60">
-                          {kitle.aciklama}
-                        </p>
-                        {kitle.maddeler && kitle.maddeler.length > 0 && (
-                          <ul className="mt-3 space-y-1.5">
-                            {kitle.maddeler.map((madde) => (
-                              <li
-                                key={madde}
-                                className="flex items-start gap-2 text-xs text-[var(--renk-ink)]/70"
-                              >
-                                <span className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
-                                <span>{madde}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          kategoriyeGit(kitle.kategori)
+                    {kitle.foto ? (
+                      <img
+                        src={kitle.foto}
+                        alt={kitle.baslik}
+                        className="relative z-10 w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
                         }}
-                        className="self-start text-xs font-semibold px-4 py-2 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition whitespace-nowrap"
-                      >
-                        İlanlara Bak
-                      </button>
-                    </div>
+                      />
+                    ) : null}
                   </div>
-                )}
+                </div>
+
+                {/* metin */}
+                <div className="flex-1 min-w-0">
+                  <p className="font-mono-etiket text-sm text-[var(--renk-ink)]/25 mb-2">
+                    {kitle.no}.
+                  </p>
+                  <h3 className="font-display text-2xl sm:text-[32px] leading-tight font-semibold text-[var(--renk-ink)] tracking-tight">
+                    {kitle.baslik}
+                  </h3>
+                  <p className="text-sm sm:text-base text-[var(--renk-gri)] mt-3 max-w-xl">
+                    {kitle.aciklama}
+                  </p>
+                  {kitle.maddeler.length > 0 && (
+                    <ul className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 max-w-xl">
+                      {kitle.maddeler.map((madde) => (
+                        <li
+                          key={madde}
+                          className="flex items-start gap-2 text-sm text-[var(--renk-ink)]/70"
+                        >
+                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
+                          <span>{madde}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <button
+                    onClick={() => kategoriyeGit(kitle.kategori)}
+                    className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition"
+                  >
+                    İlanlara Bak
+                  </button>
+                </div>
               </div>
             )
           })}
