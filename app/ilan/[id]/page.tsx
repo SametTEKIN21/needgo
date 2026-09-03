@@ -259,7 +259,7 @@ export default function IlanDetay() {
         <div className="bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-lg overflow-hidden shadow-sm">
 
           <div
-            className="relative aspect-video bg-[var(--renk-kraft)] select-none"
+            className="relative aspect-[4/3] bg-[var(--renk-ink)]/5 select-none"
             onTouchStart={(e) => {
               dokunusBaslangic.current = e.touches[0].clientX
             }}
@@ -271,7 +271,7 @@ export default function IlanDetay() {
             }}
           >
             {fotoListesi.length > 0 ? (
-              <img src={fotoListesi[aktifFoto]} alt={ilan.baslik} className="w-full h-full object-cover" />
+              <img src={fotoListesi[aktifFoto]} alt={ilan.baslik} className="w-full h-full object-contain" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-[var(--renk-ink)]/20 font-display text-5xl">
                 NG
