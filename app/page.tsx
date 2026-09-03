@@ -49,9 +49,6 @@ const KATEGORI_BILGI: Record<string, { emoji: string; bg: string }> = {
   'Antika': { emoji: '🏺', bg: '#E1F0FA' },
 }
 
-// Fotoğrafı yüklenmemiş kitle satırlarında görünen ikon rengi
-const KITLE_PANEL_RENK = '#058ED9'
-
 // Hero slaytları — 1. slayt orijinal metin, sonrakiler bilgi slaytları
 const HERO_BILGI_SLAYTLARI = [
   {
@@ -132,6 +129,14 @@ const HEDEF_KITLELER = [
     ikon: 'kalp',
     foto: '/kitle/stk.jpg',
   },
+]
+
+// "Kimler için NeedGO?" kartlarının renk temaları (paletten)
+const KART_TEMALARI = [
+  { bg: '#058ED9', metin: '#ffffff', kenar: 'transparent' }, // Blue Bell
+  { bg: '#EBF5EE', metin: '#0A2463', kenar: '#d3ddd8' },     // Mint Cream
+  { bg: '#0A2463', metin: '#ffffff', kenar: 'transparent' }, // Imperial Blue
+  { bg: '#7B7263', metin: '#ffffff', kenar: 'transparent' }, // Dim Grey
 ]
 
 // Hero'nun arkasında süzülen eşya fotoğrafı kolajı — çevre kenarlarda görünür,
@@ -759,77 +764,62 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 1. sıra — Kimler için NeedGO? (açık mavi zemin bandı) */}
-      <section className="w-full bg-[var(--renk-zemin-vurgu)]">
-        <div className="max-w-6xl mx-auto px-5 pt-12 pb-0">
-        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-3">
-          Kimler için NeedGO ?
-        </h2>
+      {/* 1. sıra — Kimler için NeedGO? (renkli kartlar) */}
+      <section className="w-full bg-[var(--renk-kart)] border-b border-[var(--renk-cizgi)]">
+        <div className="max-w-6xl mx-auto px-5 py-14">
+          <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight text-center text-balance mb-10">
+            Kimler için NeedGO?
+          </h2>
 
-        <div className="border-y border-[var(--renk-cizgi)]">
-          {HEDEF_KITLELER.map((kitle, i) => {
-            const fotoSolda = i % 2 === 0
-            return (
-              <div
-                key={kitle.baslik}
-                className={`flex flex-col gap-4 md:gap-8 py-3.5 md:items-center ${
-                  i > 0 ? 'border-t border-[var(--renk-cizgi)]' : ''
-                } ${fotoSolda ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-              >
-                {/* foto */}
-                <div className="w-full md:w-[30%] lg:w-[26%] shrink-0">
-                  <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-[var(--renk-zemin-vurgu)] border border-[var(--renk-cizgi)]">
-                    {/* fotoğraf yüklenemezse arkadaki ikon görünür */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="scale-[2.4] opacity-40">
-                        <HedefKitleIkon tur={kitle.ikon} renk={KITLE_PANEL_RENK} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {HEDEF_KITLELER.map((kitle, i) => {
+              const tema = KART_TEMALARI[i % KART_TEMALARI.length]
+              return (
+                <button
+                  key={kitle.baslik}
+                  onClick={() => kategoriyeGit(kitle.kategori)}
+                  style={{ backgroundColor: tema.bg, borderColor: tema.kenar }}
+                  className="group relative flex flex-col text-left rounded-2xl border overflow-hidden h-[400px] transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex items-start justify-between gap-3 p-5">
+                    <h3
+                      className="font-display text-lg font-semibold leading-tight tracking-tight"
+                      style={{ color: tema.metin }}
+                    >
+                      {kitle.baslik}
+                    </h3>
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      <span
+                        className="font-mono-etiket text-[11px]"
+                        style={{ color: tema.metin, opacity: 0.65 }}
+                      >
+                        ({String(i + 1).padStart(2, '0')})
+                      </span>
+                      <span className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                        <span className="flex scale-[0.62]">
+                          <HedefKitleIkon tur={kitle.ikon} renk="#0a2463" />
+                        </span>
                       </span>
                     </div>
-                    {kitle.foto ? (
-                      <img
-                        src={kitle.foto}
-                        alt={kitle.baslik}
-                        className="relative z-10 w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                        }}
-                      />
-                    ) : null}
                   </div>
-                </div>
 
-                {/* metin */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-xl font-semibold text-[var(--renk-ink)] tracking-tight">
-                    {kitle.baslik}
-                  </h3>
-                  <p className="text-sm text-[var(--renk-gri)] mt-2 max-w-xl">
-                    {kitle.aciklama}
-                  </p>
-                  {kitle.maddeler.length > 0 && (
-                    <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 max-w-xl">
-                      {kitle.maddeler.map((madde) => (
-                        <li
-                          key={madde}
-                          className="flex items-start gap-2 text-[13px] text-[var(--renk-ink)]/70"
-                        >
-                          <span className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
-                          <span>{madde}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <button
-                    onClick={() => kategoriyeGit(kitle.kategori)}
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition"
-                  >
-                    İlanlara Bak
-                  </button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+                  <div className="relative mt-auto h-[62%]">
+                    <img
+                      src={kitle.foto}
+                      alt={kitle.baslik}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
+                      <p className="text-white text-xs leading-snug">{kitle.aciklama}</p>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </section>
 
