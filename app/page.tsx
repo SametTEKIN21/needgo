@@ -226,63 +226,6 @@ function HedefKitleIkon({ tur, renk }: { tur: string; renk: string }) {
   )
 }
 
-// "Kimler için NeedGO?" bandının zemini — hedef kitleleri (öğrenci · taşınan ·
-// işletme · STK) ve paylaşım/döngü fikrini anlatan çok soluk çizgi ikon deseni
-const KITLE_ZEMIN_YOLLARI: Record<string, string> = {
-  kep: 'M12 3 2 8l10 5 8-4.2V15h2V8ZM6 10.5V15c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5',
-  ev: 'M3 11 12 3l9 8M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9',
-  canta: 'M3 7h18v12H3zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18',
-  kalp: 'M12 21s-7.5-4.5-9.5-9C1 8.5 2.5 5 6 5c2 0 3.5 1.2 4 2.5C10.5 6.2 12 5 14 5c3.5 0 5 3.5 3.5 7-2 4.5-9.5 9-9.5 9z',
-  kutu: 'M12 2 3 7v10l9 5 9-5V7l-9-5zM3 7l9 5 9-5M12 12v10',
-  dongu: 'M4 12a8 8 0 0 1 13-6.2M20 12a8 8 0 0 1-13 6.2M17 3v3h-3M7 21v-3h3',
-}
-
-const KITLE_ZEMIN = [
-  { ikon: 'kep', top: '4%', left: '1%', boyut: 104, don: -12 },
-  { ikon: 'kutu', top: '2%', left: '24%', boyut: 62, don: 8 },
-  { ikon: 'dongu', top: '3%', left: '46%', boyut: 58, don: -6 },
-  { ikon: 'kalp', top: '1%', left: '70%', boyut: 60, don: 8 },
-  { ikon: 'canta', top: '-3%', left: '90%', boyut: 92, don: 10 },
-  { ikon: 'dongu', top: '40%', left: '-4%', boyut: 132, don: 0 },
-  { ikon: 'kep', top: '68%', left: '95%', boyut: 112, don: 14 },
-  { ikon: 'canta', top: '82%', left: '8%', boyut: 76, don: -8 },
-  { ikon: 'ev', top: '85%', left: '37%', boyut: 88, don: 6 },
-  { ikon: 'kutu', top: '88%', left: '64%', boyut: 60, don: -10 },
-  { ikon: 'kalp', top: '80%', left: '84%', boyut: 54, don: 12 },
-]
-
-function KitleZemini() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-0 overflow-hidden">
-      <div className="absolute -top-24 right-0 w-[420px] h-[420px] rounded-full bg-[#058ed9]/10 blur-[120px]" />
-      {KITLE_ZEMIN.map((s, i) => (
-        <svg
-          key={i}
-          viewBox="0 0 24 24"
-          fill="none"
-          className="absolute text-[#0a2463]"
-          style={{
-            top: s.top,
-            left: s.left,
-            width: s.boyut,
-            height: s.boyut,
-            opacity: 0.08,
-            transform: `rotate(${s.don}deg)`,
-          }}
-        >
-          <path
-            d={KITLE_ZEMIN_YOLLARI[s.ikon]}
-            stroke="currentColor"
-            strokeWidth="1.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      ))}
-    </div>
-  )
-}
-
 export default function Home() {
   const router = useRouter()
   const [ilanlar, setIlanlar] = useState<Ilan[]>([])
@@ -727,7 +670,7 @@ export default function Home() {
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[360px] h-[360px] rounded-full bg-[#058ed9]/12 blur-[120px]" />
         </div>
         <HeroKolaj />
-        <div className="relative z-10 max-w-6xl mx-auto px-5 pt-14 pb-12 w-full">
+        <div className="relative z-10 max-w-6xl mx-auto px-5 pt-6 pb-10 w-full">
           <div
             className="relative max-w-2xl mx-auto"
             onMouseEnter={() => setSlaytDurdu(true)}
@@ -740,7 +683,7 @@ export default function Home() {
               >
                 {/* 1. slayt — orijinal metin */}
                 <div className="w-full shrink-0 px-9 sm:px-2">
-                  <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
+                  <div className="flex flex-col items-center justify-center text-center min-h-[340px] sm:min-h-[320px]">
                     <p className="inline-block font-semibold text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[var(--renk-orman)] border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
                       Atma · Paylaş · Dönüştür
                     </p>
@@ -760,7 +703,7 @@ export default function Home() {
                 {/* Bilgi slaytları */}
                 {HERO_BILGI_SLAYTLARI.map((slayt) => (
                   <div key={slayt.baslik} className="w-full shrink-0 px-9 sm:px-2">
-                    <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
+                    <div className="flex flex-col items-center justify-center text-center min-h-[340px] sm:min-h-[320px]">
                       <p className="inline-block font-semibold text-xs sm:text-sm tracking-tight border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
                         <span className="text-[var(--renk-ink)]/70">Neden </span>
                         <span className="text-[#058ED9]">Need</span>
@@ -816,11 +759,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 1. sıra — Kimler için NeedGO? (açık mavi zemin bandı + anlam deseni) */}
-      <section className="relative overflow-hidden w-full bg-[var(--renk-zemin-vurgu)] border-b border-[var(--renk-cizgi)]">
-        <KitleZemini />
-        <div className="relative z-10 max-w-6xl mx-auto px-5 py-12">
-        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-6">
+      {/* 1. sıra — Kimler için NeedGO? (açık mavi zemin bandı) */}
+      <section className="w-full bg-[var(--renk-zemin-vurgu)]">
+        <div className="max-w-6xl mx-auto px-5 pt-12 pb-0">
+        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-3">
           Kimler için NeedGO ?
         </h2>
 
@@ -830,7 +772,7 @@ export default function Home() {
             return (
               <div
                 key={kitle.baslik}
-                className={`flex flex-col gap-4 md:gap-8 py-6 md:py-7 md:items-center ${
+                className={`flex flex-col gap-4 md:gap-8 py-3.5 md:items-center ${
                   i > 0 ? 'border-t border-[var(--renk-cizgi)]' : ''
                 } ${fotoSolda ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
@@ -893,7 +835,7 @@ export default function Home() {
 
       {/* 2. sıra — Güncel İlanlar (beyaz zemin bandı) */}
       <main id="ilanlar" className="w-full flex-1 bg-[var(--renk-kart)]">
-        <div className="max-w-6xl mx-auto px-5 py-14">
+        <div className="max-w-6xl mx-auto px-5 pt-9 pb-14">
         <div className="flex items-baseline justify-between mb-5">
           <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)]">
             {seciliKategori ? seciliKategori : 'Güncel İlanlar'}
