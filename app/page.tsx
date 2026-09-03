@@ -36,22 +36,22 @@ const KATEGORILER = [
 ]
 
 const KATEGORI_BILGI: Record<string, { emoji: string; bg: string }> = {
-  'Mobilya': { emoji: '🛋️', bg: '#E3F0FF' },
-  'Elektronik': { emoji: '💻', bg: '#E3F0FF' },
-  'Ev & Yaşam': { emoji: '🏠', bg: '#E3F0FF' },
-  'Giyim': { emoji: '👕', bg: '#E3F0FF' },
-  'Aksesuar': { emoji: '👜', bg: '#E3F0FF' },
-  'Kişisel Bakım & Kozmetik': { emoji: '💄', bg: '#E3F0FF' },
-  'Oyuncak': { emoji: '🧸', bg: '#E3F0FF' },
-  'Ofis & Kırtasiye': { emoji: '✏️', bg: '#E3F0FF' },
-  'Yapı & Market': { emoji: '🔨', bg: '#E3F0FF' },
-  'Pet Shop': { emoji: '🐾', bg: '#E3F0FF' },
-  'Antika': { emoji: '🏺', bg: '#E3F0FF' },
+  'Mobilya': { emoji: '🛋️', bg: '#E1F0FA' },
+  'Elektronik': { emoji: '💻', bg: '#E1F0FA' },
+  'Ev & Yaşam': { emoji: '🏠', bg: '#E1F0FA' },
+  'Giyim': { emoji: '👕', bg: '#E1F0FA' },
+  'Aksesuar': { emoji: '👜', bg: '#E1F0FA' },
+  'Kişisel Bakım & Kozmetik': { emoji: '💄', bg: '#E1F0FA' },
+  'Oyuncak': { emoji: '🧸', bg: '#E1F0FA' },
+  'Ofis & Kırtasiye': { emoji: '✏️', bg: '#E1F0FA' },
+  'Yapı & Market': { emoji: '🔨', bg: '#E1F0FA' },
+  'Pet Shop': { emoji: '🐾', bg: '#E1F0FA' },
+  'Antika': { emoji: '🏺', bg: '#E1F0FA' },
 }
 
 // Tüm kartlarda sabit kalan panel rengi — kart bazlı renk farkı yok
-const KITLE_PANEL_BG = '#E3F0FF'
-const KITLE_PANEL_RENK = '#0066FF'
+const KITLE_PANEL_BG = '#E1F0FA'
+const KITLE_PANEL_RENK = '#058ED9'
 
 // Hero slaytları — 1. slayt orijinal metin, sonrakiler bilgi slaytları
 const HERO_BILGI_SLAYTLARI = [
@@ -132,13 +132,13 @@ const HEDEF_KITLELER = [
 
 // Kartlar boştayken görünen dekoratif kare deseni (Parley referansındaki gibi) — mavi tonlar
 const KARE_DESENI = [
-  { top: '14%', left: '54%', boyut: 22, renk: '#0066FF' },
-  { top: '30%', left: '38%', boyut: 16, renk: '#9CC7FF' },
-  { top: '34%', left: '66%', boyut: 14, renk: '#9CC7FF' },
-  { top: '48%', left: '28%', boyut: 18, renk: '#0066FF' },
-  { top: '52%', left: '50%', boyut: 16, renk: '#0066FF' },
-  { top: '62%', left: '18%', boyut: 14, renk: '#9CC7FF' },
-  { top: '70%', left: '60%', boyut: 16, renk: '#0066FF' },
+  { top: '14%', left: '54%', boyut: 22, renk: '#058ED9' },
+  { top: '30%', left: '38%', boyut: 16, renk: '#8FCDEC' },
+  { top: '34%', left: '66%', boyut: 14, renk: '#8FCDEC' },
+  { top: '48%', left: '28%', boyut: 18, renk: '#058ED9' },
+  { top: '52%', left: '50%', boyut: 16, renk: '#058ED9' },
+  { top: '62%', left: '18%', boyut: 14, renk: '#8FCDEC' },
+  { top: '70%', left: '60%', boyut: 16, renk: '#058ED9' },
 ]
 
 function KareDeseni() {
@@ -198,7 +198,7 @@ function HeroKolaj() {
           src={HERO_KOLAJ_GORSELLERI[i % HERO_KOLAJ_GORSELLERI.length]}
           alt=""
           loading="lazy"
-          className="absolute rounded-xl object-cover shadow-[0_10px_30px_rgba(0,59,202,0.06)]"
+          className="absolute rounded-xl object-cover shadow-[0_10px_30px_rgba(10,36,99,0.06)]"
           style={{
             top: s.top,
             left: s.left,
@@ -453,7 +453,7 @@ export default function Home() {
             <Link href="/" aria-label="NeedGO" className="inline-flex items-center gap-1.5 sm:gap-2 shrink-0">
               <img src="/needgo-n.png" alt="" className="h-8 w-8 sm:h-9 sm:w-9" />
               <span className="font-display text-lg sm:text-2xl font-bold tracking-tight">
-                <span className="text-[#2099FF]">Need</span><span className="text-[#004CD6]">GO</span>
+                <span className="text-[#058ED9]">Need</span><span className="text-[#0A2463]">GO</span>
               </span>
             </Link>
 
@@ -636,7 +636,7 @@ export default function Home() {
                 >
                   <span
                     className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0"
-                    style={{ backgroundColor: '#E3F0FF' }}
+                    style={{ backgroundColor: '#E1F0FA' }}
                   >
                     ▦
                   </span>
@@ -686,9 +686,9 @@ export default function Home() {
 
       <section className="relative overflow-hidden border-b border-[var(--renk-cizgi)] w-full">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-0">
-          <div className="absolute -top-32 -left-24 w-[460px] h-[460px] rounded-full bg-[#2099FF]/15 blur-[130px]" />
-          <div className="absolute -bottom-40 -right-24 w-[520px] h-[520px] rounded-full bg-[#e8dcc4]/70 blur-[130px]" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[360px] h-[360px] rounded-full bg-[#7cc0ff]/12 blur-[120px]" />
+          <div className="absolute -top-32 -left-24 w-[460px] h-[460px] rounded-full bg-[#058ED9]/15 blur-[130px]" />
+          <div className="absolute -bottom-40 -right-24 w-[520px] h-[520px] rounded-full bg-[#0a2463]/10 blur-[130px]" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[360px] h-[360px] rounded-full bg-[#058ed9]/12 blur-[120px]" />
         </div>
         <HeroKolaj />
         <div className="relative z-10 max-w-6xl mx-auto px-5 pt-14 pb-12 w-full">
@@ -711,7 +711,7 @@ export default function Home() {
                     <h1 className="font-display text-[26px] leading-tight sm:text-5xl font-semibold text-[var(--renk-ink)] tracking-tight text-balance">
                       Kullanmadığın eşya, birinin ihtiyacı olsun.
                     </h1>
-                    <p className="text-[var(--renk-ink)]/60 mt-4 max-w-md mx-auto text-sm sm:text-base">
+                    <p className="text-[var(--renk-gri)] mt-4 max-w-md mx-auto text-sm sm:text-base">
                       NeedGO&apos;da her şey ücretsiz, sadece paylaşım geçer.
                     </p>
                     <p className="font-display italic text-[var(--renk-orman)] text-base sm:text-lg mt-3">
@@ -727,14 +727,14 @@ export default function Home() {
                     <div className="flex flex-col items-center justify-center text-center min-h-[440px] sm:min-h-[380px]">
                       <p className="inline-block font-semibold text-xs sm:text-sm tracking-tight border border-[var(--renk-orman)]/30 bg-[var(--renk-orman)]/5 rounded-full px-4 py-1.5 mb-4">
                         <span className="text-[var(--renk-ink)]/70">Neden </span>
-                        <span className="text-[#2099FF]">Need</span>
-                        <span className="text-[#004CD6]">GO</span>
+                        <span className="text-[#058ED9]">Need</span>
+                        <span className="text-[#0A2463]">GO</span>
                         <span className="text-[var(--renk-ink)]/70">?</span>
                       </p>
                       <h2 className="font-display text-xl leading-tight sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight max-w-xl text-balance">
                         {slayt.baslik}
                       </h2>
-                      <p className="text-[var(--renk-ink)]/60 mt-4 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
+                      <p className="text-[var(--renk-gri)] mt-4 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
                         {slayt.aciklama}
                       </p>
                       {heroButonlari}
@@ -880,7 +880,7 @@ export default function Home() {
               href={`/ilan/${ilan.id}`}
               className="group flex flex-col"
             >
-              <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-[#f3f1ec]">
+              <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-[var(--renk-kraft)]">
                 {ilan.fotograf_url ? (
                   <img
                     src={ilan.fotograf_url}
@@ -931,10 +931,10 @@ export default function Home() {
             <Link href="/" className="inline-flex items-center gap-2 mb-3">
               <img src="/needgo-n.png" alt="" className="h-8 w-8" />
               <span className="font-display text-xl font-bold tracking-tight">
-                <span className="text-[#2099FF]">Need</span><span className="text-[#004CD6]">GO</span>
+                <span className="text-[#058ED9]">Need</span><span className="text-[#0A2463]">GO</span>
               </span>
             </Link>
-            <p className="text-sm text-[var(--renk-ink)]/60 max-w-xs leading-relaxed">
+            <p className="text-sm text-[var(--renk-gri)] max-w-xs leading-relaxed">
               Kullanmadığın eşya, birinin ihtiyacı olsun. Türkiye&apos;nin ücretsiz eşya paylaşım ağı.
             </p>
             <p className="font-display italic text-[var(--renk-orman)] text-sm mt-3">Paylaşmak iyileştirir.</p>

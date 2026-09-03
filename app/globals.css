@@ -3,13 +3,14 @@
 @import "tailwindcss";
 
 :root {
-  --renk-kraft: #eef1ef;
-  --renk-ink: #003bca;
-  --renk-orman: #0066ff;
-  --renk-orman-koyu: #003bca;
-  --renk-ocre: #00a3ff;
+  --renk-kraft: #ebf5ee;      /* Mint Cream — sayfa zemini */
+  --renk-ink: #0a2463;        /* Imperial Blue — başlık ve ana metin */
+  --renk-orman: #058ed9;      /* Blue Bell — marka / etkileşim rengi */
+  --renk-orman-koyu: #0a2463; /* Imperial Blue — koyu vurgular */
+  --renk-ocre: #0a2463;       /* Imperial Blue — ikincil CTA */
   --renk-kart: #ffffff;
-  --renk-cizgi: #b3dfff;
+  --renk-cizgi: #d3ddd8;      /* Mint + Dim Grey karışımı ince çizgi */
+  --renk-gri: #7b7263;        /* Dim Grey — yardımcı / gövde metni */
 }
 
 body {
