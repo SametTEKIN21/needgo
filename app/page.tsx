@@ -819,8 +819,8 @@ export default function Home() {
       {/* 1. sıra — Kimler için NeedGO? (açık mavi zemin bandı + anlam deseni) */}
       <section className="relative overflow-hidden w-full bg-[var(--renk-zemin-vurgu)] border-b border-[var(--renk-cizgi)]">
         <KitleZemini />
-        <div className="relative z-10 max-w-6xl mx-auto px-5 py-14">
-        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-8">
+        <div className="relative z-10 max-w-6xl mx-auto px-5 py-12">
+        <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-6">
           Kimler için NeedGO ?
         </h2>
 
@@ -830,13 +830,13 @@ export default function Home() {
             return (
               <div
                 key={kitle.baslik}
-                className={`flex flex-col gap-6 md:gap-12 py-10 md:py-12 md:items-center ${
+                className={`flex flex-col gap-4 md:gap-8 py-6 md:py-7 md:items-center ${
                   i > 0 ? 'border-t border-[var(--renk-cizgi)]' : ''
                 } ${fotoSolda ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
                 {/* foto */}
-                <div className="w-full md:w-[38%] lg:w-[34%] shrink-0">
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[var(--renk-zemin-vurgu)] border border-[var(--renk-cizgi)]">
+                <div className="w-full md:w-[30%] lg:w-[26%] shrink-0">
+                  <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-[var(--renk-zemin-vurgu)] border border-[var(--renk-cizgi)]">
                     {/* fotoğraf yüklenemezse arkadaki ikon görünür */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="scale-[2.4] opacity-40">
@@ -858,20 +858,20 @@ export default function Home() {
 
                 {/* metin */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-2xl sm:text-[32px] leading-tight font-semibold text-[var(--renk-ink)] tracking-tight">
+                  <h3 className="font-display text-xl font-semibold text-[var(--renk-ink)] tracking-tight">
                     {kitle.baslik}
                   </h3>
-                  <p className="text-sm sm:text-base text-[var(--renk-gri)] mt-3 max-w-xl">
+                  <p className="text-sm text-[var(--renk-gri)] mt-2 max-w-xl">
                     {kitle.aciklama}
                   </p>
                   {kitle.maddeler.length > 0 && (
-                    <ul className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 max-w-xl">
+                    <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1.5 max-w-xl">
                       {kitle.maddeler.map((madde) => (
                         <li
                           key={madde}
-                          className="flex items-start gap-2 text-sm text-[var(--renk-ink)]/70"
+                          className="flex items-start gap-2 text-[13px] text-[var(--renk-ink)]/70"
                         >
-                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
+                          <span className="mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--renk-orman)]" />
                           <span>{madde}</span>
                         </li>
                       ))}
@@ -879,7 +879,7 @@ export default function Home() {
                   )}
                   <button
                     onClick={() => kategoriyeGit(kitle.kategori)}
-                    className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition"
+                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full bg-[var(--renk-orman)] text-white hover:brightness-95 transition"
                   >
                     İlanlara Bak
                   </button>
