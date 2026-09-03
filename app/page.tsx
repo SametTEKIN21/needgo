@@ -895,7 +895,7 @@ export default function Home() {
                 <span className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/75 backdrop-blur-sm flex items-center justify-center text-[var(--renk-ink)]/50 group-hover:text-[var(--renk-orman)] transition-colors">
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
                     <path
-                      d="M12 20s-7-4.35-9.5-8.5C1 8.5 2.6 5 6 5c2.1 0 3.4 1.2 4 2.4C10.6 6.2 11.9 5 14 5c3.4 0 5 3.5 3.5 6.5C19 15.65 12 20 12 20Z"
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"
                       stroke="currentColor"
                       strokeWidth="1.8"
                       strokeLinejoin="round"
