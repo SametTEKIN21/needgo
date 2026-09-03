@@ -767,7 +767,7 @@ export default function Home() {
       {/* 1. sıra — Kimler için NeedGO? (renkli kartlar) */}
       <section className="w-full bg-[var(--renk-kart)] border-b border-[var(--renk-cizgi)]">
         <div className="max-w-6xl mx-auto px-5 py-14">
-          <h2 className="font-display text-3xl sm:text-4xl font-semibold text-[var(--renk-ink)] tracking-tight text-center text-balance mb-10">
+          <h2 className="font-grotesk text-2xl font-bold text-[var(--renk-ink)] tracking-tight mb-6">
             Kimler için NeedGO?
           </h2>
 
@@ -783,24 +783,16 @@ export default function Home() {
                 >
                   <div className="flex items-start justify-between gap-3 p-5">
                     <h3
-                      className="font-display text-lg font-semibold leading-tight tracking-tight"
+                      className="font-grotesk text-lg font-bold leading-tight tracking-tight"
                       style={{ color: tema.metin }}
                     >
                       {kitle.baslik}
                     </h3>
-                    <div className="flex flex-col items-end gap-2 shrink-0">
-                      <span
-                        className="font-mono-etiket text-[11px]"
-                        style={{ color: tema.metin, opacity: 0.65 }}
-                      >
-                        ({String(i + 1).padStart(2, '0')})
+                    <span className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+                      <span className="flex scale-[0.62]">
+                        <HedefKitleIkon tur={kitle.ikon} renk="#0a2463" />
                       </span>
-                      <span className="w-9 h-9 rounded-full bg-white flex items-center justify-center overflow-hidden">
-                        <span className="flex scale-[0.62]">
-                          <HedefKitleIkon tur={kitle.ikon} renk="#0a2463" />
-                        </span>
-                      </span>
-                    </div>
+                    </span>
                   </div>
 
                   <div className="relative mt-auto h-[62%]">
@@ -812,8 +804,10 @@ export default function Home() {
                         e.currentTarget.style.display = 'none'
                       }}
                     />
-                    <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/65 via-black/30 to-transparent">
-                      <p className="text-white text-xs leading-snug">{kitle.aciklama}</p>
+                    <div className="absolute inset-x-0 bottom-0 px-3 pt-10 pb-3 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+                      <p className="text-white text-xs font-medium leading-snug [text-shadow:0_1px_4px_rgba(0,0,0,0.7)]">
+                        {kitle.aciklama}
+                      </p>
                     </div>
                   </div>
                 </button>
@@ -827,7 +821,7 @@ export default function Home() {
       <main id="ilanlar" className="w-full flex-1 bg-[var(--renk-kart)]">
         <div className="max-w-6xl mx-auto px-5 pt-9 pb-14">
         <div className="flex items-baseline justify-between mb-5">
-          <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)]">
+          <h2 className="font-grotesk text-2xl font-bold text-[var(--renk-ink)] tracking-tight">
             {seciliKategori ? seciliKategori : 'Güncel İlanlar'}
           </h2>
           <span className="font-mono-etiket text-[11px] text-[var(--renk-ink)]/50">{gosterilenIlanlar.length} ilan</span>
