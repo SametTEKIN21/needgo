@@ -38,6 +38,7 @@ export default function IlanDetay() {
   const [mevcutKonusmaVar, setMevcutKonusmaVar] = useState(false)
   const [begenildi, setBegenildi] = useState(false)
   const [aktifFoto, setAktifFoto] = useState(0)
+  const dokunusBaslangic = useRef<number | null>(null)
   const [sikayetAcik, setSikayetAcik] = useState(false)
   const [sikayetSebep, setSikayetSebep] = useState('')
   const [sikayetAciklama, setSikayetAciklama] = useState('')
@@ -233,6 +234,11 @@ export default function IlanDetay() {
       ? [ilan.fotograf_url]
       : []
 
+  const fotoGec = (yon: number) => {
+    if (fotoListesi.length < 2) return
+    setAktifFoto((mevcut) => (mevcut + yon + fotoListesi.length) % fotoListesi.length)
+  }
+
   return (
     <div className="min-h-screen bg-[var(--renk-kraft)]">
       <header className="sticky top-0 z-40 bg-[var(--renk-kraft)]/95 backdrop-blur border-b border-[var(--renk-cizgi)]">
@@ -252,7 +258,18 @@ export default function IlanDetay() {
       <main className="max-w-3xl mx-auto px-5 py-10">
         <div className="bg-[var(--renk-kart)] border border-[var(--renk-cizgi)] rounded-lg overflow-hidden shadow-sm">
 
-          <div className="relative aspect-video bg-[var(--renk-kraft)]">
+          <div
+            className="relative aspect-video bg-[var(--renk-kraft)] select-none"
+            onTouchStart={(e) => {
+              dokunusBaslangic.current = e.touches[0].clientX
+            }}
+            onTouchEnd={(e) => {
+              if (dokunusBaslangic.current === null) return
+              const fark = e.changedTouches[0].clientX - dokunusBaslangic.current
+              if (Math.abs(fark) > 40) fotoGec(fark < 0 ? 1 : -1)
+              dokunusBaslangic.current = null
+            }}
+          >
             {fotoListesi.length > 0 ? (
               <img src={fotoListesi[aktifFoto]} alt={ilan.baslik} className="w-full h-full object-cover" />
             ) : (
@@ -260,26 +277,47 @@ export default function IlanDetay() {
                 NG
               </div>
             )}
+
+            {fotoListesi.length > 1 && (
+              <>
+                <button
+                  onClick={() => fotoGec(-1)}
+                  aria-label="Önceki fotoğraf"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-[var(--renk-kart)]/85 text-[var(--renk-ink)] text-lg shadow-sm hover:bg-[var(--renk-kart)] transition-colors"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => fotoGec(1)}
+                  aria-label="Sonraki fotoğraf"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-[var(--renk-kart)]/85 text-[var(--renk-ink)] text-lg shadow-sm hover:bg-[var(--renk-kart)] transition-colors"
+                >
+                  ›
+                </button>
+
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {fotoListesi.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setAktifFoto(index)}
+                      aria-label={`Fotoğraf ${index + 1}`}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        aktifFoto === index ? 'bg-[var(--renk-kart)]' : 'bg-[var(--renk-kart)]/40'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <div className="absolute bottom-3 right-3 font-mono-etiket text-[11px] font-semibold px-1.5 py-0.5 rounded bg-[var(--renk-ink)]/55 text-[var(--renk-kraft)]">
+                  {aktifFoto + 1}/{fotoListesi.length}
+                </div>
+              </>
+            )}
+
             <div className="absolute top-4 right-4 rotate-6 border-2 border-[var(--renk-orman)] text-[var(--renk-orman)] font-mono-etiket text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-[var(--renk-kart)]">
               Ücretsiz
             </div>
           </div>
-
-          {fotoListesi.length > 1 && (
-            <div className="flex gap-2 p-3 overflow-x-auto border-b border-[var(--renk-cizgi)]">
-              {fotoListesi.map((url, index) => (
-                <button
-                  key={index}
-                  onClick={() => setAktifFoto(index)}
-                  className={`shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-colors ${
-                    aktifFoto === index ? 'border-[var(--renk-orman)]' : 'border-transparent'
-                  }`}
-                >
-                  <img src={url} alt={`Fotoğraf ${index + 1}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          )}
 
           <div className="p-6 sm:p-8">
             {(kendiIlaniMi || yonetici) && !onayli && (
