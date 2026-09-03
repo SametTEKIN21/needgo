@@ -149,11 +149,26 @@ export default function Ilanlarim() {
     if (!onay) return
 
     setIslemdekiId(id)
-    const { error } = await supabase.from('ilanlar').delete().eq('id', id)
+    // .select() ile silinen satırı geri iste — RLS silmeyi engellerse hata
+    // dönmez ama data boş gelir; bunu gerçek bir hata gibi ele al.
+    const { data, error } = await supabase
+      .from('ilanlar')
+      .delete()
+      .eq('id', id)
+      .select('id')
     setIslemdekiId(null)
 
     if (error) {
       alert('Silinemedi: ' + error.message)
+      return
+    }
+
+    if (!data || data.length === 0) {
+      console.error(
+        'İlan silinemedi: 0 satır etkilendi. ilanlar tablosunda DELETE RLS ' +
+          'politikası eksik olabilir — supabase/ilan-silme.sql dosyasını çalıştır.'
+      )
+      alert('İlan silinemedi. Lütfen tekrar dene.')
       return
     }
 

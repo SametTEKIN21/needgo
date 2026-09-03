@@ -374,13 +374,20 @@ export default function Home() {
     const yenile = () => {
       supabase.auth.getUser().then(({ data }) => okunmamisMesajlariGetir(data.user?.id))
     }
+    // Sekmeye geri dönünce ilan listesini de tazele (başka sekmede silinen/
+    // bağışlanan ilan burada da düşsün)
+    const sekmeyeDonunce = () => {
+      if (document.visibilityState === 'visible') ilanlariGetir()
+    }
     const aralik = setInterval(yenile, 30000)
     window.addEventListener('focus', yenile)
+    document.addEventListener('visibilitychange', sekmeyeDonunce)
 
     return () => {
       listener.subscription.unsubscribe()
       clearInterval(aralik)
       window.removeEventListener('focus', yenile)
+      document.removeEventListener('visibilitychange', sekmeyeDonunce)
     }
   }, [])
 
