@@ -844,14 +844,19 @@ export default function Home() {
                   <h3 className="font-grotesk text-[15px] font-bold text-[var(--renk-ink)] leading-tight line-clamp-1">
                     {ilan.baslik}
                   </h3>
+                  {ilan.kategori && (
+                    <p className="font-mono-etiket text-[10px] uppercase tracking-wide text-[var(--renk-orman)] mt-1 truncate">
+                      {ilan.kategori}
+                    </p>
+                  )}
                   {ilan.aciklama && (
                     <p className="text-xs text-[var(--renk-gri)] mt-1.5 leading-snug line-clamp-2">
                       {ilan.aciklama}
                     </p>
                   )}
-                  {(ilan.konum || ilan.kategori) && (
+                  {ilan.konum && (
                     <p className="text-[11px] text-[var(--renk-gri)]/80 mt-1.5 truncate">
-                      {[ilan.konum, ilan.kategori].filter(Boolean).join(' · ')}
+                      {ilan.konum}
                     </p>
                   )}
                 </div>
