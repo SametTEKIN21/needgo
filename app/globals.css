@@ -11,6 +11,7 @@
   --renk-kart: #ffffff;
   --renk-cizgi: #d3ddd8;      /* Mint + Dim Grey karışımı ince çizgi */
   --renk-gri: #7b7263;        /* Dim Grey — yardımcı / gövde metni */
+  --renk-zemin-vurgu: #e6f2fa; /* Blue Bell'in çok açık yıkaması — bölüm zemini */
 }
 
 body {

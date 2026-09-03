@@ -787,8 +787,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Kimler için NeedGO? — üzerine gelince genişleyen kartlar */}
-      <section className="max-w-6xl mx-auto px-5 py-12 w-full">
+      {/* 1. sıra — Kimler için NeedGO? (açık mavi zemin bandı) */}
+      <section className="w-full bg-[var(--renk-zemin-vurgu)] border-b border-[var(--renk-cizgi)]">
+        <div className="max-w-6xl mx-auto px-5 py-14">
         <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)] mb-6">
           Kimler için NeedGO ?
         </h2>
@@ -865,9 +866,12 @@ export default function Home() {
             )
           })}
         </div>
+        </div>
       </section>
 
-      <main id="ilanlar" className="max-w-6xl mx-auto px-5 py-10 w-full flex-1">
+      {/* 2. sıra — Güncel İlanlar (beyaz zemin bandı) */}
+      <main id="ilanlar" className="w-full flex-1 bg-[var(--renk-kart)]">
+        <div className="max-w-6xl mx-auto px-5 py-14">
         <div className="flex items-baseline justify-between mb-5">
           <h2 className="font-display text-xl font-semibold text-[var(--renk-ink)]">
             {seciliKategori ? seciliKategori : 'Güncel İlanlar'}
@@ -930,9 +934,10 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        </div>
       </main>
 
-      <footer className="border-t border-[var(--renk-cizgi)] mt-10 bg-[var(--renk-kart)]">
+      <footer className="border-t border-[var(--renk-cizgi)] bg-[var(--renk-kart)]">
         <div className="max-w-6xl mx-auto px-5 py-12 grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10">
           <div>
             <Link href="/" className="inline-flex items-center gap-2 mb-3">
