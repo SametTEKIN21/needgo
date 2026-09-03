@@ -953,7 +953,7 @@ export default function Home() {
           <div>
             <h3 className="font-display text-sm font-semibold text-[var(--renk-ink)] mb-3">Güvenli Paylaşım</h3>
             <ul className="flex flex-col gap-2.5">
-              {['%100 Ücretsiz', 'Reklamsız deneyim', 'Kalabalık buluşma noktaları', 'Topluluk kuralları'].map((madde) => (
+              {['%100 Ücretsiz', 'Kalabalık buluşma noktaları', 'Topluluk kuralları'].map((madde) => (
                 <li key={madde} className="flex items-start gap-2 text-sm text-[var(--renk-ink)]/60">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="mt-0.5 shrink-0 text-[var(--renk-orman)]">
                     <path d="M20 7 10 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
