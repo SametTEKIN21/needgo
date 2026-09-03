@@ -765,7 +765,7 @@ export default function Home() {
       </section>
 
       {/* 1. sıra — Kimler için NeedGO? (renkli kartlar) */}
-      <section className="w-full bg-[var(--renk-kart)] border-b border-[var(--renk-cizgi)]">
+      <section className="w-full bg-[var(--renk-zemin-kirik)] border-b border-[var(--renk-cizgi)]">
         <div className="max-w-6xl mx-auto px-5 py-14">
           <h2 className="font-grotesk text-2xl font-bold text-[var(--renk-ink)] tracking-tight mb-6">
             Kimler için NeedGO?
@@ -832,27 +832,31 @@ export default function Home() {
             {seciliKategori ? 'Bu kategoride henüz ilan yok.' : 'Henüz ilan yok. İlk ilanı sen ver!'}
           </p>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {gosterilenIlanlar.map((ilan) => (
             <Link
               key={ilan.id}
               href={`/ilan/${ilan.id}`}
-              className="group flex flex-col"
+              className="group relative flex flex-col rounded-2xl overflow-hidden bg-[var(--renk-zemin-kirik)] border border-[var(--renk-cizgi)] h-[400px] transition-transform duration-300 hover:-translate-y-1"
             >
-              <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-[var(--renk-kraft)]">
-                {ilan.fotograf_url ? (
-                  <img
-                    src={ilan.fotograf_url}
-                    alt={ilan.baslik}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <img src="/needgo-n.png" alt="" className="w-12 h-12 opacity-15" />
-                  </div>
-                )}
-                <span className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/75 backdrop-blur-sm flex items-center justify-center text-[var(--renk-ink)]/50 group-hover:text-[var(--renk-orman)] transition-colors">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <div className="flex items-start justify-between gap-2 p-4 bg-[var(--renk-kraft)] border-b border-[var(--renk-cizgi)]">
+                <div className="min-w-0">
+                  <h3 className="font-grotesk text-[15px] font-bold text-[var(--renk-ink)] leading-tight line-clamp-1">
+                    {ilan.baslik}
+                  </h3>
+                  {ilan.aciklama && (
+                    <p className="text-xs text-[var(--renk-gri)] mt-1.5 leading-snug line-clamp-2">
+                      {ilan.aciklama}
+                    </p>
+                  )}
+                  {(ilan.konum || ilan.kategori) && (
+                    <p className="text-[11px] text-[var(--renk-gri)]/80 mt-1.5 truncate">
+                      {[ilan.konum, ilan.kategori].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                </div>
+                <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 text-[var(--renk-ink)]/45 group-hover:text-[var(--renk-orman)] transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"
                       stroke="currentColor"
@@ -863,21 +867,21 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="pt-3">
-                <h3 className="font-display text-base font-semibold text-[var(--renk-ink)] leading-snug line-clamp-1">
-                  {ilan.baslik}
-                </h3>
-                <p className="text-sm text-[var(--renk-ink)]/70 mt-0.5">Ücretsiz</p>
-                {ilan.aciklama && (
-                  <p className="text-sm text-[var(--renk-ink)]/70 mt-2 leading-relaxed line-clamp-2">
-                    {ilan.aciklama}
-                  </p>
+              <div className="relative flex-1 min-h-0 bg-[var(--renk-kraft)]">
+                {ilan.fotograf_url ? (
+                  <img
+                    src={ilan.fotograf_url}
+                    alt={ilan.baslik}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img src="/needgo-n.png" alt="" className="w-12 h-12 opacity-15" />
+                  </div>
                 )}
-                {(ilan.konum || ilan.kategori) && (
-                  <p className="text-[11px] text-[var(--renk-ink)]/40 mt-2 truncate">
-                    {[ilan.konum, ilan.kategori].filter(Boolean).join(' · ')}
-                  </p>
-                )}
+                <span className="absolute top-2.5 left-2.5 bg-white/95 text-[var(--renk-orman)] font-mono-etiket text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full shadow-sm">
+                  Ücretsiz
+                </span>
               </div>
             </Link>
           ))}
