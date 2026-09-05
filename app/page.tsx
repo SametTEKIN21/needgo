@@ -141,32 +141,27 @@ const KART_TEMALARI = [
 
 // Hero'nun arkasında süzülen eşya fotoğrafı kolajı — çevre kenarlarda görünür,
 // ortaya doğru radyal maske ile silinir ki metin okunur kalsın.
-const HERO_KOLAJ_GORSELLERI = Array.from(
-  { length: 20 },
-  (_, i) => `/hero/esya-${String(i + 1).padStart(2, '0')}.jpg?v=3`
-)
-
+// n = /hero/esya-<n>.jpg ; 9 numara (ayakkabı) bilerek kullanılmıyor.
 const KOLAJ_SLOTLARI = [
-  { top: '0%', left: '2%', boyut: 156, don: -8, bulanik: 0.6, opak: 0.62 },
-  { top: '6%', left: '19%', boyut: 116, don: 5, bulanik: 1.2, opak: 0.48 },
-  { top: '-3%', left: '35%', boyut: 132, don: -4, bulanik: 0.4, opak: 0.66 },
-  { top: '3%', left: '52%', boyut: 120, don: 6, bulanik: 1, opak: 0.5 },
-  { top: '-1%', left: '69%', boyut: 138, don: -6, bulanik: 0.6, opak: 0.62 },
-  { top: '6%', left: '86%', boyut: 158, don: 7, bulanik: 0.8, opak: 0.56 },
-  { top: '34%', left: '-4%', boyut: 178, don: 6, bulanik: 0.3, opak: 0.7 },
-  { top: '28%', left: '90%', boyut: 150, don: -5, bulanik: 0.5, opak: 0.64 },
-  { top: '58%', left: '88%', boyut: 172, don: 8, bulanik: 0.3, opak: 0.68 },
-  { top: '70%', left: '0%', boyut: 156, don: -6, bulanik: 0.6, opak: 0.62 },
-  { top: '78%', left: '17%', boyut: 118, don: 8, bulanik: 1.2, opak: 0.48 },
-  { top: '86%', left: '34%', boyut: 128, don: -4, bulanik: 0.8, opak: 0.52 },
-  { top: '82%', left: '51%', boyut: 122, don: 5, bulanik: 1, opak: 0.5 },
-  { top: '80%', left: '68%', boyut: 138, don: -7, bulanik: 0.7, opak: 0.56 },
-  { top: '88%', left: '85%', boyut: 150, don: 6, bulanik: 0.7, opak: 0.56 },
-  { top: '46%', left: '-3%', boyut: 150, don: 7, bulanik: 0.5, opak: 0.6 },
-  { top: '40%', left: '91%', boyut: 146, don: -6, bulanik: 0.5, opak: 0.62 },
-  { top: '15%', left: '9%', boyut: 108, don: 6, bulanik: 1, opak: 0.5 },
-  { top: '19%', left: '79%', boyut: 112, don: -7, bulanik: 0.9, opak: 0.52 },
-  { top: '92%', left: '2%', boyut: 128, don: 5, bulanik: 0.8, opak: 0.54 },
+  { n: 1, top: '0%', left: '2%', boyut: 156, don: -8, bulanik: 0.6, opak: 0.62 },
+  { n: 2, top: '6%', left: '19%', boyut: 116, don: 5, bulanik: 1.2, opak: 0.48 },
+  { n: 3, top: '-3%', left: '35%', boyut: 132, don: -4, bulanik: 0.4, opak: 0.66 },
+  { n: 4, top: '3%', left: '52%', boyut: 120, don: 6, bulanik: 1, opak: 0.5 },
+  { n: 5, top: '-1%', left: '69%', boyut: 138, don: -6, bulanik: 0.6, opak: 0.62 },
+  { n: 6, top: '6%', left: '86%', boyut: 158, don: 7, bulanik: 0.8, opak: 0.56 },
+  { n: 7, top: '34%', left: '-4%', boyut: 178, don: 6, bulanik: 0.3, opak: 0.7 },
+  { n: 8, top: '28%', left: '90%', boyut: 150, don: -5, bulanik: 0.5, opak: 0.64 },
+  { n: 17, top: '58%', left: '88%', boyut: 172, don: 8, bulanik: 0.3, opak: 0.68 }, // çamaşır mak. (ayakkabı yerine)
+  { n: 10, top: '70%', left: '0%', boyut: 156, don: -6, bulanik: 0.6, opak: 0.62 },
+  { n: 11, top: '78%', left: '17%', boyut: 118, don: 8, bulanik: 1.2, opak: 0.48 },
+  { n: 12, top: '86%', left: '34%', boyut: 128, don: -4, bulanik: 0.8, opak: 0.52 },
+  { n: 13, top: '82%', left: '51%', boyut: 122, don: 5, bulanik: 1, opak: 0.5 },
+  { n: 14, top: '80%', left: '68%', boyut: 138, don: -7, bulanik: 0.7, opak: 0.56 },
+  { n: 15, top: '88%', left: '85%', boyut: 150, don: 6, bulanik: 0.7, opak: 0.56 },
+  { n: 16, top: '13%', left: '7%', boyut: 100, don: 6, bulanik: 1, opak: 0.44 },   // buzdolabı
+  { n: 18, top: '15%', left: '82%', boyut: 102, don: -7, bulanik: 0.95, opak: 0.46 }, // bulaşık mak.
+  { n: 19, top: '93%', left: '22%', boyut: 112, don: 5, bulanik: 0.8, opak: 0.5 },  // fırın
+  { n: 20, top: '94%', left: '60%', boyut: 118, don: -6, bulanik: 0.7, opak: 0.52 }, // yatak
 ]
 
 function HeroKolaj() {
@@ -178,7 +173,7 @@ function HeroKolaj() {
       {KOLAJ_SLOTLARI.map((s, i) => (
         <img
           key={i}
-          src={HERO_KOLAJ_GORSELLERI[i % HERO_KOLAJ_GORSELLERI.length]}
+          src={`/hero/esya-${String(s.n).padStart(2, '0')}.jpg?v=3`}
           alt=""
           loading="lazy"
           className="absolute rounded-xl object-cover shadow-[0_10px_30px_rgba(10,36,99,0.06)]"
