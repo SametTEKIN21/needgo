@@ -142,8 +142,8 @@ const KART_TEMALARI = [
 // Hero'nun arkasında süzülen eşya fotoğrafı kolajı — çevre kenarlarda görünür,
 // ortaya doğru radyal maske ile silinir ki metin okunur kalsın.
 const HERO_KOLAJ_GORSELLERI = Array.from(
-  { length: 15 },
-  (_, i) => `/hero/esya-${String(i + 1).padStart(2, '0')}.jpg?v=2`
+  { length: 20 },
+  (_, i) => `/hero/esya-${String(i + 1).padStart(2, '0')}.jpg?v=3`
 )
 
 const KOLAJ_SLOTLARI = [
@@ -162,6 +162,11 @@ const KOLAJ_SLOTLARI = [
   { top: '82%', left: '51%', boyut: 122, don: 5, bulanik: 1, opak: 0.5 },
   { top: '80%', left: '68%', boyut: 138, don: -7, bulanik: 0.7, opak: 0.56 },
   { top: '88%', left: '85%', boyut: 150, don: 6, bulanik: 0.7, opak: 0.56 },
+  { top: '46%', left: '-3%', boyut: 150, don: 7, bulanik: 0.5, opak: 0.6 },
+  { top: '40%', left: '91%', boyut: 146, don: -6, bulanik: 0.5, opak: 0.62 },
+  { top: '15%', left: '9%', boyut: 108, don: 6, bulanik: 1, opak: 0.5 },
+  { top: '19%', left: '79%', boyut: 112, don: -7, bulanik: 0.9, opak: 0.52 },
+  { top: '92%', left: '2%', boyut: 128, don: 5, bulanik: 0.8, opak: 0.54 },
 ]
 
 function HeroKolaj() {
