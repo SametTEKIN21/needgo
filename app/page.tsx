@@ -474,7 +474,7 @@ export default function Home() {
                 href="/mesajlar"
                 onClick={mesajlariGorulduIsaretle}
                 aria-label={okunmamisMesaj > 0 ? `Mesajlar (${okunmamisMesaj} yeni)` : 'Mesajlar'}
-                className="relative hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
+                className="relative flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
@@ -483,20 +483,6 @@ export default function Home() {
                   <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-[#B5533C] text-white text-[10px] font-semibold flex items-center justify-center">
                     {okunmamisMesaj > 9 ? '9+' : okunmamisMesaj}
                   </span>
-                )}
-              </Link>
-              <Link
-                href="/mesajlar"
-                onClick={mesajlariGorulduIsaretle}
-                aria-label="Bildirimler"
-                className="relative hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-[var(--renk-ink)]/60 hover:bg-[var(--renk-kraft)] hover:text-[var(--renk-orman)] transition-colors"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  <path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-                {okunmamisMesaj > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#B5533C] ring-2 ring-white" />
                 )}
               </Link>
 
@@ -973,7 +959,6 @@ export default function Home() {
             <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center">
               <Link href="/kullanim-sartlari" className="text-xs text-[var(--renk-ink)]/40 hover:text-[var(--renk-orman)] transition-colors">Şartlar ve Koşullar</Link>
               <Link href="/gizlilik-bildirimi" className="text-xs text-[var(--renk-ink)]/40 hover:text-[var(--renk-orman)] transition-colors">Gizlilik Bildirimi</Link>
-              <Link href="/gizlilik-bildirimi" className="text-xs text-[var(--renk-ink)]/40 hover:text-[var(--renk-orman)] transition-colors">Çerez Ayarları</Link>
             </div>
           </div>
         </div>
