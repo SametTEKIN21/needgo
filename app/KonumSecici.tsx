@@ -3,14 +3,10 @@
 import { useEffect, useState } from 'react'
 
 const POPULER_KONUMLAR = [
-  'Bağcılar, İstanbul',
-  'Maltepe, İstanbul',
-  'Esenyurt, İstanbul',
-  'Pendik, İstanbul',
-  'Fatih, İstanbul',
   'Kadıköy, İstanbul',
   'Beşiktaş, İstanbul',
   'Üsküdar, İstanbul',
+  'Ataşehir, İstanbul',
 ]
 
 const SON_KONUMLAR_KEY = 'needgo-son-konumlar'
