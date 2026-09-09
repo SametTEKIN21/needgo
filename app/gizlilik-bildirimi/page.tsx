@@ -5,19 +5,31 @@ export default function GizlilikBildirimi() {
     <StatikSayfaShell baslik="Gizlilik Bildirimi">
       <div className="flex flex-col gap-7 text-sm sm:text-base text-[var(--renk-ink)]/80 leading-relaxed">
 
-        <p className="text-xs text-[var(--renk-ink)]/50">
-          Kişisel Verilerin Korunması ve İşlenmesine İlişkin Aydınlatma Metni
-        </p>
+        <div className="flex flex-col gap-1">
+          <p className="text-xs text-[var(--renk-ink)]/50">
+            Kişisel Verilerin Korunması ve İşlenmesine İlişkin Aydınlatma Metni
+          </p>
+          <p className="text-xs text-[var(--renk-ink)]/50">Son güncelleme: 9 Eylül 2026</p>
+        </div>
 
         <section>
           <h2 className="font-display text-lg font-semibold text-[var(--renk-ink)] mb-2">
             Madde 1 — Veri Sorumlusu
           </h2>
           <p>
-            NeedGO olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;)
-            uyarınca Veri Sorumlusu sıfatıyla, platformumuzu kullanan siz değerli
-            kullanıcılarımızı kişisel verilerinizin işlenmesine ilişkin aydınlatmak isteriz.
+            NeedGO platformu, 6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;KVKK&quot;)
+            uyarınca Veri Sorumlusu sıfatıyla aşağıdaki gerçek kişi tarafından işletilmektedir:
           </p>
+          <ul className="list-disc pl-5 flex flex-col gap-1 mt-2">
+            <li>Unvan: Burak Tekin Bilgisayar Programlama Faaliyetleri</li>
+            <li>Adres: Çeliktepe Mah. Buhara Sk. No:15/4, Kağıthane/İstanbul</li>
+            <li>
+              E-posta:{' '}
+              <a href="mailto:destek.needgo@gmail.com" className="text-[var(--renk-orman)] font-semibold hover:underline">
+                destek.needgo@gmail.com
+              </a>
+            </li>
+          </ul>
         </section>
 
         <section>
@@ -47,7 +59,10 @@ export default function GizlilikBildirimi() {
           </ul>
           <p className="mt-2">
             Bu veriler, platformumuzu kullanımınız sırasında doğrudan sizin tarafınızdan,
-            elektronik ortamda (web sitesi üzerinden) toplanmaktadır.
+            elektronik ortamda (web sitesi ve/veya mobil uygulama üzerinden) toplanmaktadır.
+            Uygulamayı bir mobil mağazadan (App Store, Google Play) indirmeniz halinde, o
+            mağazanın kendi gizlilik politikası kapsamında topladığı kullanım istatistikleri
+            NeedGO&apos;nun kontrolü ve sorumluluğu dışındadır.
           </p>
         </section>
 
@@ -75,14 +90,23 @@ export default function GizlilikBildirimi() {
 
         <section>
           <h2 className="font-display text-lg font-semibold text-[var(--renk-ink)] mb-2">
-            Madde 4 — Kişisel Verilerin Aktarılması
+            Madde 4 — Kişisel Verilerin Aktarılması ve Yurt Dışına Aktarım
           </h2>
-          <p>
+          <p className="mb-2">
             Kişisel verileriniz, platformun teknik altyapısını sağlayan hizmet
             sağlayıcımız (veritabanı ve sunucu hizmeti) ile sınırlı olarak
             paylaşılmaktadır. Bu hizmet sağlayıcı, verilerinizi yalnızca teknik altyapı
-            hizmetinin sağlanması amacıyla işler. Yasal bir zorunluluk halinde, yetkili
-            kamu kurum ve kuruluşları ile paylaşım yapılabilir.
+            hizmetinin sağlanması amacıyla işler.
+          </p>
+          <p className="mb-2">
+            Sunucularımız Avrupa Birliği sınırları içinde, Almanya (Frankfurt) bölgesinde
+            barındırılmaktadır. Bu durum KVKK kapsamında yurt dışına veri aktarımı olarak
+            değerlendirildiğinden, verileriniz KVKK m.9 uyarınca açık rızanıza dayanılarak
+            ve/veya kanunda öngörülen uygun güvenceler sağlanarak aktarılmaktadır.
+          </p>
+          <p>
+            Yasal bir zorunluluk halinde, yetkili kamu kurum ve kuruluşları ile paylaşım
+            yapılabilir.
           </p>
         </section>
 
@@ -104,10 +128,14 @@ export default function GizlilikBildirimi() {
           </ul>
           <p className="mt-2">
             haklarına sahipsiniz. Bu haklarınızı kullanmak için{' '}
+            <a href="mailto:destek.needgo@gmail.com" className="text-[var(--renk-orman)] font-semibold hover:underline">
+              destek.needgo@gmail.com
+            </a>{' '}
+            adresi üzerinden veya{' '}
             <a href="/iletisim" className="text-[var(--renk-orman)] font-semibold hover:underline">
               İletişim
             </a>{' '}
-            sayfamızda yer alan e-posta adresimiz üzerinden bize ulaşabilirsiniz.
+            sayfamızdan bize ulaşabilirsiniz.
           </p>
         </section>
 

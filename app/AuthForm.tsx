@@ -36,6 +36,7 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
   const [mod, setMod] = useState<'giris' | 'kayit' | 'sifremi-unuttum'>('giris')
   const [email, setEmail] = useState('')
   const [sifre, setSifre] = useState('')
+  const [kvkkOnay, setKvkkOnay] = useState(false)
   const [yukleniyor, setYukleniyor] = useState(false)
   const [hata, setHata] = useState('')
   const [mesaj, setMesaj] = useState('')
@@ -57,6 +58,10 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
 
   const gonderIstek = async () => {
     if (mod === 'kayit') {
+      if (!kvkkOnay) {
+        setHata('Devam etmek için Gizlilik Bildirimi\'ni kabul etmelisin.')
+        return
+      }
       const { error } = await supabase.auth.signUp({
         email,
         password: sifre,
@@ -143,6 +148,29 @@ export default function AuthForm({ onClose }: { onClose: () => void }) {
             >
               Şifremi unuttum
             </button>
+          )}
+
+          {mod === 'kayit' && (
+            <label className="flex items-start gap-2 text-xs text-[var(--renk-ink)]/70">
+              <input
+                type="checkbox"
+                checked={kvkkOnay}
+                onChange={(e) => setKvkkOnay(e.target.checked)}
+                required
+                className="mt-0.5 accent-[var(--renk-orman)]"
+              />
+              <span>
+                <a
+                  href="/gizlilik-bildirimi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--renk-orman)] font-semibold hover:underline"
+                >
+                  Gizlilik Bildirimi
+                </a>
+                &apos;ni okudum, kişisel verilerimin işlenmesini kabul ediyorum.
+              </span>
+            </label>
           )}
 
           {hata && <p className="text-xs text-[#B5533C]">{hata}</p>}
