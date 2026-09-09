@@ -36,6 +36,7 @@ export default function IlanDetayClient() {
   const [kota, setKota] = useState<KotaDurumu | null>(null)
   const [kotaHata, setKotaHata] = useState('')
   const [mevcutKonusmaVar, setMevcutKonusmaVar] = useState(false)
+  const [profilTam, setProfilTam] = useState(false)
   const [begenildi, setBegenildi] = useState(false)
   const [aktifFoto, setAktifFoto] = useState(0)
   const dokunusBaslangic = useRef<number | null>(null)
@@ -49,6 +50,7 @@ export default function IlanDetayClient() {
     const getir = async () => {
       const { data: userData } = await supabase.auth.getUser()
       setKullanici(userData.user)
+      if (userData.user) profilTamMi().then(setProfilTam)
 
       const { data, error } = await supabase
         .from('ilanlar')
@@ -72,11 +74,9 @@ export default function IlanDetayClient() {
 
         if (!sayacArtirildi.current) {
           sayacArtirildi.current = true
-          const yeniGoruntulenme = ((data as Ilan).goruntulenme_sayisi || 0) + 1
-          await supabase
-            .from('ilanlar')
-            .update({ goruntulenme_sayisi: yeniGoruntulenme })
-            .eq('id', params.id)
+          // Sayaç, ilan sahibi olmayanlar da artırabilsin diye RPC ile
+          // (ilanlar tablosunda UPDATE yetkisi yalnızca sahibinde/admin'de).
+          await supabase.rpc('ilan_goruntulendi', { p_ilan_id: params.id })
         }
 
         const begeniliListe = JSON.parse(localStorage.getItem('begenilenIlanlar') || '[]')
@@ -93,10 +93,7 @@ export default function IlanDetayClient() {
     if (!ilan || begenildi) return
 
     const yeniBegeni = (ilan.begeni_sayisi || 0) + 1
-    const { error } = await supabase
-      .from('ilanlar')
-      .update({ begeni_sayisi: yeniBegeni })
-      .eq('id', ilan.id)
+    const { error } = await supabase.rpc('ilan_begenildi', { p_ilan_id: ilan.id })
 
     if (!error) {
       setIlan({ ...ilan, begeni_sayisi: yeniBegeni })
@@ -144,7 +141,7 @@ export default function IlanDetayClient() {
     }
 
     // Yeni istek — profil eksikse önce profile yönlendir
-    if (!profilTamMi(kullanici)) {
+    if (!(await profilTamMi())) {
       setMesajGonderiliyor(false)
       router.push('/profil')
       return
@@ -375,7 +372,7 @@ export default function IlanDetayClient() {
                 </p>
               )}
               {!kendiIlaniMi && kullanici && (() => {
-                const profilEksik = !profilTamMi(kullanici) && !mevcutKonusmaVar
+                const profilEksik = !profilTam && !mevcutKonusmaVar
                 const kotaDolu = !profilEksik && !!kota && kota.kalan === 0 && !mevcutKonusmaVar
                 return (
                   <div className="flex flex-col gap-2">

@@ -381,12 +381,12 @@ export default function Home() {
     await supabase.auth.signOut()
   }
 
-  const ilanVerTiklandi = () => {
+  const ilanVerTiklandi = async () => {
     if (!kullanici) {
       setAuthAcik(true)
       return
     }
-    if (!profilTamMi(kullanici)) {
+    if (!(await profilTamMi())) {
       router.push('/profil')
       return
     }

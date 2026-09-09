@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import GeriButonu from '../GeriButonu'
 import { supabase } from '../lib/supabase'
-import { kotaDurumu, tarihMetni, AYLIK_ALMA_HAKKI, type KotaDurumu } from '../lib/kota'
+import { profilGetir, profilKaydet, hesabiSil } from '../lib/profil'
+import { kotaDurumu, tarihMetni, type KotaDurumu } from '../lib/kota'
 import type { User } from '@supabase/supabase-js'
 
 type ProfilForm = {
@@ -31,7 +32,7 @@ const ALAN_ETIKETLERI: { alan: keyof ProfilForm; etiket: string }[] = [
   { alan: 'adres', etiket: 'Adres' },
 ]
 
-const profilTamMi = (f: ProfilForm) =>
+const formTamMi = (f: ProfilForm) =>
   ALAN_ETIKETLERI.every(({ alan }) => f[alan].trim().length > 0)
 
 export default function Profil() {
@@ -41,22 +42,25 @@ export default function Profil() {
   const [kayitli, setKayitli] = useState<ProfilForm | null>(null)
   const [duzenleme, setDuzenleme] = useState(true)
   const [kaydediliyor, setKaydediliyor] = useState(false)
+  const [siliniyor, setSiliniyor] = useState(false)
   const [hata, setHata] = useState('')
   const [kota, setKota] = useState<KotaDurumu | null>(null)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    ;(async () => {
+      const { data } = await supabase.auth.getUser()
       setKullanici(data.user)
-      const m = (data.user?.user_metadata ?? {}) as Partial<ProfilForm>
+
+      const p = await profilGetir()
       const yuklenen: ProfilForm = {
-        ad: m.ad ?? '',
-        soyad: m.soyad ?? '',
-        telefon: m.telefon ?? '',
-        adres: m.adres ?? '',
-        iletisim_eposta: m.iletisim_eposta ?? data.user?.email ?? '',
+        ad: p.ad,
+        soyad: p.soyad,
+        telefon: p.telefon,
+        adres: p.adres,
+        iletisim_eposta: p.iletisim_eposta || data.user?.email || '',
       }
       setForm(yuklenen)
-      if (profilTamMi(yuklenen)) {
+      if (p.profil_tam) {
         setKayitli(yuklenen)
         setDuzenleme(false)
       } else {
@@ -66,7 +70,7 @@ export default function Profil() {
       if (data.user) {
         kotaDurumu(data.user.id).then(setKota).catch(() => {})
       }
-    })
+    })()
   }, [])
 
   const alanDegistir =
@@ -86,15 +90,14 @@ export default function Profil() {
       iletisim_eposta: form.iletisim_eposta.trim(),
     }
 
-    if (!profilTamMi(temiz)) {
+    if (!formTamMi(temiz)) {
       setHata('Tüm alanları doldurman gerekiyor.')
       return
     }
 
     setKaydediliyor(true)
     try {
-      const { error } = await supabase.auth.updateUser({ data: { ...temiz } })
-      if (error) throw error
+      await profilKaydet(temiz)
 
       // Sabit yönlendirme — ana sayfa taze kullanıcı bilgisiyle yeniden yüklenir
       window.location.href = '/'
@@ -103,6 +106,22 @@ export default function Profil() {
       setHata(
         'Kaydedilemedi: ' + (err instanceof Error ? err.message : 'bilinmeyen hata')
       )
+    }
+  }
+
+  const hesabiSilOnay = async () => {
+    if (siliniyor) return
+    const onay = window.confirm(
+      'Hesabın ve tüm verilerin (ilanların, mesajların, fotoğrafların) kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musun?'
+    )
+    if (!onay) return
+    setSiliniyor(true)
+    try {
+      await hesabiSil()
+      window.location.href = '/'
+    } catch (err) {
+      setSiliniyor(false)
+      alert('Silinemedi: ' + (err instanceof Error ? err.message : 'bilinmeyen hata'))
     }
   }
 
@@ -162,7 +181,7 @@ export default function Profil() {
             </h2>
             <p className="text-sm text-[var(--renk-ink)]/70">
               Son 30 günde <strong>{kota.alinan}</strong> eşya aldın · kalan hakkın{' '}
-              <strong>{kota.kalan}</strong>/{AYLIK_ALMA_HAKKI}
+              <strong>{kota.kalan}</strong>/{kota.limit}
             </p>
             {kota.kalan === 0 && kota.yenilenmeTarihi && (
               <p className="text-xs text-[var(--renk-ink)]/50 mt-1">
@@ -170,7 +189,7 @@ export default function Profil() {
               </p>
             )}
             <p className="text-xs text-[var(--renk-ink)]/45 mt-2">
-              Fırsatçılığı önlemek için her hesap 30 günde en fazla {AYLIK_ALMA_HAKKI} eşya alabilir.
+              Fırsatçılığı önlemek için her hesap 30 günde en fazla {kota.limit} eşya alabilir.
             </p>
           </div>
         )}
@@ -336,6 +355,21 @@ export default function Profil() {
             </div>
           </form>
         )}
+
+        <div className="mt-8 rounded-lg border border-[#B5533C]/40 bg-[var(--renk-kart)] p-4 sm:p-5">
+          <h2 className="font-display text-base font-semibold text-[#B5533C] mb-1">Hesabı sil</h2>
+          <p className="text-xs text-[var(--renk-ink)]/60 leading-relaxed">
+            Hesabın ve tüm verilerin (ilanların, mesajların, fotoğrafların) kalıcı
+            olarak silinir. Bu işlem geri alınamaz.
+          </p>
+          <button
+            onClick={hesabiSilOnay}
+            disabled={siliniyor}
+            className="mt-3 px-5 py-2.5 rounded-full border border-[#B5533C] text-[#B5533C] text-sm font-semibold hover:bg-[#B5533C] hover:text-white transition-colors disabled:opacity-60"
+          >
+            {siliniyor ? 'Siliniyor…' : 'Hesabımı sil'}
+          </button>
+        </div>
       </main>
     </div>
   )

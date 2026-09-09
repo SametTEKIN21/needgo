@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import GeriButonu from '../GeriButonu'
 import { supabase } from '../lib/supabase'
-import { alinanEsyaSayisi, AYLIK_ALMA_HAKKI } from '../lib/kota'
+import { alinanEsyaSayisi, aylikAlmaHakki } from '../lib/kota'
 import { moderasyonEtiketi } from '../lib/moderasyon'
 import type { User } from '@supabase/supabase-js'
 
@@ -98,11 +98,12 @@ export default function Ilanlarim() {
       if (!benzersiz.has(k.gonderen_id)) benzersiz.set(k.gonderen_id, k.gonderen_email ?? null)
     }
 
+    const hak = await aylikAlmaHakki()
     const liste: Aday[] = await Promise.all(
       [...benzersiz.entries()].map(async ([gonderen_id, gonderen_email]) => ({
         gonderen_id,
         gonderen_email,
-        kotaDolu: (await alinanEsyaSayisi(gonderen_id)) >= AYLIK_ALMA_HAKKI,
+        kotaDolu: (await alinanEsyaSayisi(gonderen_id)) >= hak,
       }))
     )
 
