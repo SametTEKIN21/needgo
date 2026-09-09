@@ -1,4 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NeedGO — Web (Next.js)
+
+Ücretsiz eşya paylaşım platformunun web istemcisi. Mobil uygulama ayrı repoda:
+`github.com/SametTEKIN21/needgoapp` (React Native / Expo).
+
+## Ortak backend — TEK KAYNAK
+
+Web ve mobil **aynı Supabase projesini** kullanır. Kurallar tek yerde:
+
+- **RLS + şema:** `supabase/guvenlik-v2.sql` — **her iki repoda birebir aynı dosya.**
+  DB değişikliği: dosyayı güncelle → iki repoya kopyala → Supabase SQL Editor'de çalıştır.
+  (`guvenlik-v2.sql`, eski `moderasyon.sql`/`kota-limiti.sql`/`mesaj-silme.sql`/`ilan-silme.sql`
+  dosyalarının yerini alan birleşik settir.)
+- **İş kuralları** (kota limiti, zorunlu profil alanları): `uygulama_ayarlari` tablosu →
+  `uygulama_ayarlari()` RPC. `app/lib/kota.ts` oradan okur.
+- **Profil:** şifreli `profiller` tablosu + `profil_getir`/`profil_kaydet` RPC'leri
+  (`app/lib/profil.ts`). Düz metin `user_metadata`'da TUTULMAZ.
+- **Admin:** `adminler` tablosu + `admin_mi()`.
+- **Env:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+  `SUPABASE_SERVICE_ROLE_KEY`, `HF_TOKEN`, `NEXT_PUBLIC_ADMIN_EMAILS`.
+
+---
 
 ## Getting Started
 
