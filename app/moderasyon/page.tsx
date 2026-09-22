@@ -33,11 +33,10 @@ type Sikayet = {
 export default function ModerasyonPaneli() {
   const [kullanici, setKullanici] = useState<User | null>(null)
   const [kontrolBitti, setKontrolBitti] = useState(false)
+  const [yetkili, setYetkili] = useState(false)
   const [bekleyenler, setBekleyenler] = useState<BekleyenIlan[]>([])
   const [sikayetler, setSikayetler] = useState<Sikayet[]>([])
   const [islemdeki, setIslemdeki] = useState<string | null>(null)
-
-  const yetkili = adminMi(kullanici?.email)
 
   const verileriGetir = async () => {
     const [{ data: ilanData }, { data: sikayetData }] = await Promise.all([
@@ -61,7 +60,9 @@ export default function ModerasyonPaneli() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       setKullanici(data.user)
-      if (adminMi(data.user?.email)) {
+      const admin = await adminMi()
+      setYetkili(admin)
+      if (admin) {
         await verileriGetir()
       }
       setKontrolBitti(true)

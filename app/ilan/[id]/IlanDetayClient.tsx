@@ -37,6 +37,7 @@ export default function IlanDetayClient() {
   const [kotaHata, setKotaHata] = useState('')
   const [mevcutKonusmaVar, setMevcutKonusmaVar] = useState(false)
   const [profilTam, setProfilTam] = useState(false)
+  const [yonetici, setYonetici] = useState(false)
   const [begenildi, setBegenildi] = useState(false)
   const [aktifFoto, setAktifFoto] = useState(0)
   const dokunusBaslangic = useRef<number | null>(null)
@@ -50,7 +51,10 @@ export default function IlanDetayClient() {
     const getir = async () => {
       const { data: userData } = await supabase.auth.getUser()
       setKullanici(userData.user)
-      if (userData.user) profilTamMi().then(setProfilTam)
+      if (userData.user) {
+        profilTamMi().then(setProfilTam)
+        adminMi().then(setYonetici)
+      }
 
       const { data, error } = await supabase
         .from('ilanlar')
@@ -207,7 +211,6 @@ export default function IlanDetayClient() {
   })
 
   const kendiIlaniMi = kullanici && ilan.user_id === kullanici.id
-  const yonetici = adminMi(kullanici?.email)
   const onayli = ilan.moderasyon_durumu === 'onaylandi' || !ilan.moderasyon_durumu
 
   // Onaylanmamış ilanı sadece sahibi ve admin görebilir

@@ -1,5 +1,7 @@
 // Moderasyon — paylaşılan sabitler ve istemci yardımcıları
 
+import { supabase } from './supabase'
+
 export type ModerasyonDurumu = 'onaylandi' | 'beklemede' | 'reddedildi'
 
 export const SIKAYET_SEBEPLERI = [
@@ -11,14 +13,20 @@ export const SIKAYET_SEBEPLERI = [
   'Diğer',
 ] as const
 
-// İstemci tarafında admin arayüzünü göstermek için (asıl yetki kontrolü RLS'te).
-export function adminMi(email: string | null | undefined): boolean {
-  if (!email) return false
-  const liste = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '')
-    .split(',')
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean)
-  return liste.includes(email.toLowerCase())
+/**
+ * Giriş yapan kullanıcı admin mi? Tek kaynak: DB'deki `adminler` tablosu,
+ * `admin_mi()` RPC'si üzerinden okunur (RLS'i zorlayan fonksiyonla aynı).
+ * Eskiden `NEXT_PUBLIC_ADMIN_EMAILS` ortam değişkenine bakıyordu — o, DB'deki
+ * `adminler` tablosundan bağımsız ikinci bir kaynaktı, kaldırıldı.
+ */
+export async function adminMi(): Promise<boolean> {
+  try {
+    const { data, error } = await supabase.rpc('admin_mi')
+    if (error) return false
+    return Boolean(data)
+  } catch {
+    return false
+  }
 }
 
 export function moderasyonEtiketi(durum: string | null | undefined): {

@@ -235,6 +235,7 @@ export default function Home() {
   const router = useRouter()
   const [ilanlar, setIlanlar] = useState<Ilan[]>([])
   const [kullanici, setKullanici] = useState<User | null>(null)
+  const [yonetici, setYonetici] = useState(false)
   const [authAcik, setAuthAcik] = useState(false)
   const [ilanFormAcik, setIlanFormAcik] = useState(false)
   const [konumSeciciAcik, setKonumSeciciAcik] = useState(false)
@@ -341,11 +342,14 @@ export default function Home() {
     supabase.auth.getUser().then(({ data }) => {
       setKullanici(data.user)
       okunmamisMesajlariGetir(data.user?.id)
+      if (data.user) adminMi().then(setYonetici)
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setKullanici(session?.user ?? null)
       okunmamisMesajlariGetir(session?.user?.id)
+      setYonetici(false)
+      if (session?.user) adminMi().then(setYonetici)
     })
 
     const yenile = () => {
@@ -532,7 +536,7 @@ export default function Home() {
                         <Link href="/hesap-ayarlari" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
                           Hesap
                         </Link>
-                        {adminMi(kullanici.email) && (
+                        {yonetici && (
                           <Link href="/moderasyon" onClick={() => setProfilMenuAcik(false)} className="block px-4 py-2 text-sm text-[var(--renk-ink)] hover:bg-[var(--renk-kraft)] transition-colors">
                             Moderasyon
                           </Link>
